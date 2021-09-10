@@ -1,0 +1,73 @@
+{
+    "name": "webalternatif/flysystem-failover-bundle",
+    "description": "A bundle to create failover Flysystem adapters.",
+    "type": "symfony-bundle",
+    "keywords": ["flysystem", "failover", "adapter", "bundle", "filesystem", "storage"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Web|Alternatif",
+            "email": "contact@webalternatif.com",
+            "homepage": "https://www.webalternatif.com"
+        }
+    ],
+    "require": {
+        "php": "8.0.*",
+        "league/flysystem": "^2.0",
+        "nyholm/dsn": "^2.0",
+        "symfony/config": "^4.4 || ^5.2",
+        "symfony/console": "^4.4 || ^5.2",
+        "symfony/dependency-injection": "^4.4 || ^5.2",
+        "symfony/event-dispatcher": "^4.4 || ^5.2",
+        "symfony/http-kernel": "^4.4 || ^5.2"
+    },
+    "require-dev": {
+        "doctrine/common": "^3.1",
+        "doctrine/dbal": "^2.13",
+        "doctrine/orm": "^2.9",
+        "friendsofphp/php-cs-fixer": "^3.1",
+        "infection/infection": "^0.25.0",
+        "league/flysystem-memory": "2.1.0-alpha.1",
+        "phpunit/phpunit": "^9.5",
+        "psalm/plugin-phpunit": "^0.15.1",
+        "vimeo/psalm": "^4.10"
+    },
+    "repositories": [
+        {
+            "type": "github",
+            "url": "https://github.com/chapa/flysystem-memory.git"
+        }
+    ],
+    "scripts": {
+        "cs-check": "php-cs-fixer fix --dry-run",
+        "cs-fix": "php-cs-fixer fix",
+        "infection": "infection --threads=$(nproc)",
+        "phpunit": "phpunit",
+        "psalm": "psalm --threads=$(nproc) --no-cache",
+        "test": ["@psalm", "@phpunit", "@infection", "@cs-check"]
+    },
+    "autoload": {
+        "psr-4": {
+            "Webf\\FlysystemFailoverBundle\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Webf\\FlysystemFailoverBundle\\": "tests"
+        }
+    },
+    "config": {
+        "bin-dir": "bin",
+        "sort-packages": true
+    },
+    "archive": {
+        "exclude": [
+            "/.github/",
+            "/tests/",
+            "/.php-cs-fixer.dist.php",
+            "/infection.json.dist",
+            "/phpunit.xml.dist",
+            "/psalm.xml"
+        ]
+    }
+}
