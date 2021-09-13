@@ -10,27 +10,36 @@ use Webf\FlysystemFailoverBundle\Exception\FailoverAdapterNotFoundException;
 
 class FailoverAdaptersLocator implements FailoverAdaptersLocatorInterface, IteratorAggregate
 {
+    private bool $iterableConsumed = false;
+
     /**
      * @var array<string, FailoverAdapter>
      */
-    private array $failoverAdapters;
+    private array $failoverAdapters = [];
 
     /**
-     * @param iterable<FailoverAdapter> $adapters
+     * @param iterable<FailoverAdapter> $adaptersIterable
      */
-    public function __construct(iterable $adapters)
+    public function __construct(private iterable $adaptersIterable)
     {
-        $this->failoverAdapters = [];
-
-        foreach ($adapters as $adapter) {
-            $this->failoverAdapters[$adapter->getName()] = $adapter;
-        }
     }
 
     public function get(string $name): FailoverAdapter
     {
         if (key_exists($name, $this->failoverAdapters)) {
             return $this->failoverAdapters[$name];
+        }
+
+        if (!$this->iterableConsumed) {
+            foreach ($this->adaptersIterable as $adapter) {
+                $this->failoverAdapters[$adapter->getName()] = $adapter;
+
+                if ($adapter->getName() === $name) {
+                    return $adapter;
+                }
+            }
+
+            $this->iterableConsumed = true;
         }
 
         throw FailoverAdapterNotFoundException::withName($name);
@@ -41,6 +50,14 @@ class FailoverAdaptersLocator implements FailoverAdaptersLocatorInterface, Itera
      */
     public function getIterator(): ArrayIterator
     {
+        if (!$this->iterableConsumed) {
+            foreach ($this->adaptersIterable as $adapter) {
+                $this->failoverAdapters[$adapter->getName()] = $adapter;
+            }
+
+            $this->iterableConsumed = true;
+        }
+
         return new ArrayIterator($this->failoverAdapters);
     }
 }
