@@ -74,10 +74,6 @@ class WebfFlysystemFailoverExtension extends Extension
         /** @var _Config $config */
         $config = $this->processConfiguration(new Configuration(), $configs);
 
-        if (0 === count($config['adapters'])) {
-            return;
-        }
-
         $this->registerCommands($container);
         $this->registerFailoverAdapters($container, $config);
         $this->registerMessageHandlers($container);
