@@ -58,7 +58,7 @@ class WebfFlysystemFailoverExtension extends Extension
         self::PREFIX . '.message_handler.delete_file';
     public const REPLICATE_FILE_MESSAGE_HANDLER_SERVICE_ID =
         self::PREFIX . '.message_handler.replicate_file';
-    public const MESSAGE_HANDLER_TAG_NAME = self::PREFIX . 'message_handler';
+    public const MESSAGE_HANDLER_TAG_NAME = self::PREFIX . '.message_handler';
 
     public const SYNC_SERVICE_ID = self::PREFIX . '.service.sync';
 

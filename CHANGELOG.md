@@ -1,4 +1,8 @@
-## v0.1.1 (unreleased)
+## v0.2.0 (unreleased)
+
+### 💥 Breaking changes
+
+  * Rename tag `webf_flysystem_failovermessage_handler` into `webf_flysystem_failover.message_handler`
 
 ### ✨ New features
 
