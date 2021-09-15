@@ -1,3 +1,9 @@
+## v0.2.1 (unreleased)
+
+### 🐛 Bug fixes
+
+  * Fix `DoctrineMessageRepository` issues with SQLite driver
+
 ## v0.2.0 (September 14, 2021)
 
 ### 💥 Breaking changes

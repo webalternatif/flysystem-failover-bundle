@@ -244,7 +244,7 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
             return false;
         }
 
-        return $result->rowCount() > 0;
+        return false !== $result->fetchAssociative();
     }
 
     private function setup(): void
