@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webf\FlysystemFailoverBundle\MessageRepository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\RetryableException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\ForwardCompatibility\DriverStatement;
 use Doctrine\DBAL\Schema\Comparator;
@@ -35,6 +36,8 @@ use Webf\FlysystemFailoverBundle\Message\ReplicateFile;
  */
 class DoctrineMessageRepository implements MessageRepositoryInterface
 {
+    private const POP_RETRY_COUNT = 10;
+
     private const DEFAULT_OPTIONS = [
         'table_name' => 'webf_flysystem_failover_messages',
     ];
@@ -133,6 +136,18 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
     }
 
     public function pop(): ?MessageInterface
+    {
+        for ($i = 0; $i < self::POP_RETRY_COUNT; ++$i) {
+            try {
+                return $this->doPop();
+            } catch (RetryableException) {
+            }
+        }
+
+        return null;
+    }
+
+    public function doPop(): ?MessageInterface
     {
         $now = new \DateTimeImmutable();
 

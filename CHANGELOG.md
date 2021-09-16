@@ -4,6 +4,10 @@
 
   * Fix `DoctrineMessageRepository` issues with SQLite driver
 
+### ⚡ Performance improvements
+
+  * Retry pop 10 times before returning null in `DoctrineMessageRepository`
+
 ## v0.2.0 (September 14, 2021)
 
 ### 💥 Breaking changes
