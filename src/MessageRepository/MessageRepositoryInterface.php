@@ -19,4 +19,9 @@ interface MessageRepositoryInterface
      * the underlaying storage.
      */
     public function pop(): ?MessageInterface;
+
+    /**
+     * Return messages without removing them from the underlying storage.
+     */
+    public function findBy(FindByCriteria $criteria): FindResults;
 }

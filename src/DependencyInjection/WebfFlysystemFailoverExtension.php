@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
+use Webf\FlysystemFailoverBundle\Command\ListMessagesCommand;
 use Webf\FlysystemFailoverBundle\Command\ProcessMessagesCommand;
 use Webf\FlysystemFailoverBundle\Command\SyncCommand;
 use Webf\FlysystemFailoverBundle\EventListener\DoctrineSchemaListener;
@@ -65,6 +66,8 @@ class WebfFlysystemFailoverExtension extends Extension
     public const DOCTRINE_SCHEMA_LISTENER_SERVICE_ID =
         self::PREFIX . '.listener.doctrine_schema';
 
+    public const LIST_MESSAGES_COMMAND_SERVICE_ID =
+        self::PREFIX . '.command.list_messages';
     public const PROCESS_MESSAGE_COMMAND_SERVICE_ID =
         self::PREFIX . '.command.process_message';
     public const SCAN_COMMAND_SERVICE_ID = self::PREFIX . '.command.scan';
@@ -84,6 +87,16 @@ class WebfFlysystemFailoverExtension extends Extension
     private function registerCommands(
         ContainerBuilder $container
     ): void {
+        $container->setDefinition(
+            self::LIST_MESSAGES_COMMAND_SERVICE_ID,
+            (new Definition(ListMessagesCommand::class))
+                ->setArguments([
+                    new Reference(self::FAILOVER_ADAPTERS_LOCATOR_SERVICE_ID),
+                    new Reference(self::MESSAGE_REPOSITORY_SERVICE_ID),
+                ])
+                ->addTag('console.command')
+        );
+
         $container->setDefinition(
             self::PROCESS_MESSAGE_COMMAND_SERVICE_ID,
             (new Definition(ProcessMessagesCommand::class))

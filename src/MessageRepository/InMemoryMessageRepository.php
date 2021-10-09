@@ -30,4 +30,32 @@ class InMemoryMessageRepository implements MessageRepositoryInterface
 
         return $messages;
     }
+
+    public function findBy(FindByCriteria $criteria): FindResults
+    {
+        $now = new \DateTimeImmutable();
+
+        $items = [];
+        $i = 0;
+        foreach ($this->messages as $message) {
+            if (null !== ($failoverAdapter = $criteria->getFailoverAdapter())) {
+                if ($message->getFailoverAdapter() !== $failoverAdapter) {
+                    continue;
+                }
+            }
+
+            $items[] = new MessageWithMetadata($message, $now, $now);
+
+            if (++$i > $criteria->getLimit()) {
+                break;
+            }
+        }
+
+        return new FindResults(
+            $criteria->getLimit(),
+            count($this->messages),
+            $criteria->getPage(),
+            $items
+        );
+    }
 }

@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Webf\FlysystemFailoverBundle\MessageRepository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Exception\RetryableException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\ForwardCompatibility\DriverStatement;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
@@ -100,19 +103,10 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
         ;
 
         try {
-            if (method_exists($qb, 'executeStatement')) {
-                $qb->executeStatement();
-            } else {
-                $qb->execute();
-            }
+            $this->executeStatement($qb);
         } catch (TableNotFoundException) {
             $this->setup();
-
-            if (method_exists($qb, 'executeStatement')) {
-                $qb->executeStatement();
-            } else {
-                $qb->execute();
-            }
+            $this->executeStatement($qb);
         }
     }
 
@@ -128,7 +122,54 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
         return null;
     }
 
-    public function doPop(): ?MessageInterface
+    public function findBy(FindByCriteria $criteria): FindResults
+    {
+        $limit = $criteria->getLimit();
+        $page = $criteria->getPage();
+
+        $qb = $this->connection->createQueryBuilder();
+
+        $qb
+            ->select('*')
+            ->from($this->options['table_name'])
+            ->orderBy('available_at')
+            ->addOrderBy('created_at')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit)
+        ;
+
+        try {
+            $result = $this->executeQuery($qb);
+        } catch (TableNotFoundException) {
+            return new FindResults($limit, 0, $page, []);
+        }
+
+        $qb
+            ->select('COUNT(*)')
+            ->setFirstResult(0)
+            ->setMaxResults(null)
+        ;
+
+        $countResult = $this->executeQuery($qb);
+        $total = (int) $countResult->fetchOne();
+
+        $fetchItems = function () use ($result): \Generator {
+            while (true) {
+                /** @var false|_DatabaseRow $data */
+                $data = $result->fetchAssociative();
+
+                if (false === $data) {
+                    return;
+                }
+
+                yield $this->getMessageWithMetadata($data);
+            }
+        };
+
+        return new FindResults($limit, $total, $page, $fetchItems());
+    }
+
+    private function doPop(): ?MessageInterface
     {
         $now = new \DateTimeImmutable();
 
@@ -144,13 +185,7 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
         ;
 
         try {
-            if (method_exists($qb, 'executeQuery')) {
-                /** @var DriverStatement $result */
-                $result = $qb->executeQuery();
-            } else {
-                /** @var DriverStatement $result */
-                $result = $qb->execute();
-            }
+            $result = $this->executeQuery($qb);
         } catch (TableNotFoundException) {
             return null;
         }
@@ -167,28 +202,7 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
             ['id' => $data['id']]
         );
 
-        return match ($data['action']) {
-            'delete_directory' => new DeleteDirectory(
-                $data['failover_adapter'],
-                $data['path'],
-                (int) $data['destination_adapter'],
-                (int) $data['retry_count'],
-            ),
-            'delete_file' => new DeleteFile(
-                $data['failover_adapter'],
-                $data['path'],
-                (int) $data['destination_adapter'],
-                (int) $data['retry_count'],
-            ),
-            'replicate_file' => new ReplicateFile(
-                $data['failover_adapter'],
-                $data['path'],
-                (int) $data['source_adapter'],
-                (int) $data['destination_adapter'],
-                (int) $data['retry_count'],
-            ),
-            default => throw new \RuntimeException(),
-        };
+        return $this->getMessage($data);
     }
 
     private function exists(MessageInterface $message): bool
@@ -216,13 +230,7 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
         ;
 
         try {
-            if (method_exists($qb, 'executeQuery')) {
-                /** @var DriverStatement $result */
-                $result = $qb->executeQuery();
-            } else {
-                /** @var DriverStatement $result */
-                $result = $qb->execute();
-            }
+            $result = $this->executeQuery($qb);
         } catch (TableNotFoundException) {
             return false;
         }
@@ -238,6 +246,75 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
             ReplicateFile::class => 'replicate_file',
             default => throw new InvalidArgumentException('Unsupported message')
         };
+    }
+
+    /**
+     * @param _DatabaseRow $data
+     */
+    private function getMessage(array $data): MessageInterface
+    {
+        return match ($data['action']) {
+            'delete_directory' => new DeleteDirectory(
+                $data['failover_adapter'],
+                $data['path'],
+                (int) $data['destination_adapter'],
+                (int) $data['retry_count'],
+            ),
+            'delete_file' => new DeleteFile(
+                $data['failover_adapter'],
+                $data['path'],
+                (int) $data['destination_adapter'],
+                (int) $data['retry_count'],
+            ),
+            'replicate_file' => new ReplicateFile(
+                $data['failover_adapter'],
+                $data['path'],
+                (int) $data['source_adapter'],
+                (int) $data['destination_adapter'],
+                (int) $data['retry_count'],
+            ),
+            default => throw new InvalidArgumentException('Unsupported message'),
+        };
+    }
+
+    /**
+     * @param _DatabaseRow $data
+     */
+    private function getMessageWithMetadata(array $data): MessageWithMetadata
+    {
+        return new MessageWithMetadata(
+            $this->getMessage($data),
+            new \DateTimeImmutable($data['created_at']),
+            new \DateTimeImmutable($data['available_at']),
+        );
+    }
+
+    /**
+     * @throws DBALException
+     */
+    private function executeQuery(QueryBuilder $qb): DriverStatement|Result
+    {
+        if (method_exists($qb, 'executeQuery')) {
+            /** @var Result $result */
+            $result = $qb->executeQuery();
+        } else {
+            /** @var DriverStatement $result */
+            $result = $qb->execute();
+        }
+
+        return $result;
+    }
+
+    /**
+     * @throws DBALException
+     */
+    private function executeStatement(QueryBuilder $qb): void
+    {
+        if (method_exists($qb, 'executeStatement')) {
+            $qb->executeStatement();
+        } else {
+            $qb->execute();
+        }
     }
 
     private function setup(): void

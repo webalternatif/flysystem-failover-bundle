@@ -2,8 +2,13 @@
 
 ### 💥 Breaking changes
 
+  * Add `findBy()` method to `MessageRepositoryInterface`
   * Add `getFailoverAdapter()`, `getPath()`, `getInnerSourceAdapter()` and `getInnerDestinationAdapter()` methods to `MessageInterface`
   * Rename `replicate` action to `replicate_file` in `DoctrineMessageRepository` (needs to remove or rename impacted rows in the database)
+
+### ✨ New features
+
+  * Add command to list remaining messages to process
 
 ## v0.2.1 (September 16, 2021)
 
