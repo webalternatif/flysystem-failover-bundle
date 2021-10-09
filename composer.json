@@ -30,7 +30,11 @@
         "league/flysystem-memory": "2.1.0-alpha.1",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.15.1",
+        "symfony/serializer": "^5.3",
         "vimeo/psalm": "^4.10"
+    },
+    "suggest": {
+        "symfony/serializer": "To enable --format option in console commands"
     },
     "repositories": [
         {

@@ -5,17 +5,21 @@ declare(strict_types=1);
 namespace Webf\FlysystemFailoverBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Webf\FlysystemFailoverBundle\Exception\InvalidArgumentException;
+use Symfony\Component\Serializer\Encoder\JsonEncode;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\SerializerInterface;
 use Webf\FlysystemFailoverBundle\Flysystem\FailoverAdaptersLocatorInterface;
 use Webf\FlysystemFailoverBundle\Message\DeleteDirectory;
 use Webf\FlysystemFailoverBundle\Message\DeleteFile;
 use Webf\FlysystemFailoverBundle\Message\ReplicateFile;
 use Webf\FlysystemFailoverBundle\MessageRepository\FindByCriteria;
 use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
+use Webf\FlysystemFailoverBundle\Serializer\Normalizer\FindResultsNormalizer;
 
 class ListMessagesCommand extends Command
 {
@@ -24,6 +28,7 @@ class ListMessagesCommand extends Command
     public function __construct(
         private FailoverAdaptersLocatorInterface $failoverAdaptersLocator,
         private MessageRepositoryInterface $messageRepository,
+        private ?SerializerInterface $serializer
     ) {
         parent::__construct();
     }
@@ -46,6 +51,19 @@ class ListMessagesCommand extends Command
         ;
 
         $results = $this->messageRepository->findBy($criteria);
+
+        if (null !== $this->serializer) {
+            if (null !== ($format = $this->getStringOption($input, 'format'))) {
+                $context = $input->getOption('pretty') ? [
+                    JsonEncode::OPTIONS => JSON_PRETTY_PRINT,
+                    XmlEncoder::FORMAT_OUTPUT => true,
+                ] : [];
+
+                $output->writeln($this->serializer->serialize($results, $format, $context));
+
+                return Command::SUCCESS;
+            }
+        }
 
         $io = new SymfonyStyle($input, $output);
         $showFailoverAdapterColumn = $input->hasOption('adapter')
@@ -117,7 +135,7 @@ class ListMessagesCommand extends Command
             ));
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     protected function configure(): void
@@ -154,6 +172,25 @@ class ListMessagesCommand extends Command
             'Page of items to display',
             FindByCriteria::DEFAULT_PAGE
         );
+
+        if (null !== $this->serializer) {
+            $this->addOption(
+                'format',
+                'f',
+                InputOption::VALUE_REQUIRED,
+                sprintf(
+                    'Output format (one of <comment>"%s"</comment>)',
+                    join('"</comment>, <comment>"', FindResultsNormalizer::SUPPORTED_FORMATS)
+                )
+            );
+
+            $this->addOption(
+                'pretty',
+                null,
+                InputOption::VALUE_NONE,
+                'Pretty print json and xml format outputs'
+            );
+        }
 
         $this->setDescription('List messages of the repository');
     }

@@ -8,10 +8,12 @@ use Nyholm\Dsn\DsnParser;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Webf\FlysystemFailoverBundle\Command\ListMessagesCommand;
 use Webf\FlysystemFailoverBundle\Command\ProcessMessagesCommand;
 use Webf\FlysystemFailoverBundle\Command\SyncCommand;
@@ -24,6 +26,7 @@ use Webf\FlysystemFailoverBundle\MessageHandler\DeleteFileHandler;
 use Webf\FlysystemFailoverBundle\MessageHandler\MessageHandlerLocator;
 use Webf\FlysystemFailoverBundle\MessageHandler\ReplicateFileHandler;
 use Webf\FlysystemFailoverBundle\MessageRepository\DoctrineMessageRepository;
+use Webf\FlysystemFailoverBundle\Serializer\Normalizer\FindResultsNormalizer;
 use Webf\FlysystemFailoverBundle\Service\SyncService;
 
 /**
@@ -61,6 +64,9 @@ class WebfFlysystemFailoverExtension extends Extension
         self::PREFIX . '.message_handler.replicate_file';
     public const MESSAGE_HANDLER_TAG_NAME = self::PREFIX . '.message_handler';
 
+    public const FIND_RESULTS_NORMALIZER_SERVICE_ID =
+        self::PREFIX . '.normalizer.find_results';
+
     public const SYNC_SERVICE_ID = self::PREFIX . '.service.sync';
 
     public const DOCTRINE_SCHEMA_LISTENER_SERVICE_ID =
@@ -81,6 +87,9 @@ class WebfFlysystemFailoverExtension extends Extension
         $this->registerFailoverAdapters($container, $config);
         $this->registerMessageHandlers($container);
         $this->registerMessageRepository($container, $config);
+        if (interface_exists(NormalizerInterface::class)) {
+            $this->registerNormalizers($container);
+        }
         $this->registerServices($container);
     }
 
@@ -93,6 +102,7 @@ class WebfFlysystemFailoverExtension extends Extension
                 ->setArguments([
                     new Reference(self::FAILOVER_ADAPTERS_LOCATOR_SERVICE_ID),
                     new Reference(self::MESSAGE_REPOSITORY_SERVICE_ID),
+                    new Reference('serializer', ContainerInterface::NULL_ON_INVALID_REFERENCE),
                 ])
                 ->addTag('console.command')
         );
@@ -243,6 +253,15 @@ class WebfFlysystemFailoverExtension extends Extension
             default:
                 throw new InvalidArgumentException('"doctrine://" and "service://" are the only supported DSN at configuration path "webf_flysystem_failover.message_repository_dsn".');
         }
+    }
+
+    private function registerNormalizers(ContainerBuilder $container): void
+    {
+        $container->setDefinition(
+            self::FIND_RESULTS_NORMALIZER_SERVICE_ID,
+            (new Definition(FindResultsNormalizer::class))
+                ->addTag('serializer.normalizer')
+        );
     }
 
     private function registerServices(ContainerBuilder $container): void
