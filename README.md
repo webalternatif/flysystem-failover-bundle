@@ -112,7 +112,24 @@ available:
 $ bin/console webf:flysystem-failover:process-messages
 ```
 
-It will process and remove the oldest message present in the repository.
+It will process and remove the oldest messages present in the repository.
+
+### Listing messages to be processed
+
+To list messages without removing them from the repository, run the following
+command:
+
+```bash
+$ bin/console webf:flysystem-failover:list-messages
+```
+
+Results are paginated by default, you can use `--limit` (`-l`) and `--page`
+(`-p`) to configure pagination.
+
+If [`symfony/serializer`][3] is installed, the `--format` (`-f`) becomes
+available and allows you to display output in `csv`, `json` or `xml`.
+
+Use `--help` for more info.
 
 ### Synchronize existing storages
 
@@ -135,7 +152,7 @@ To run all tests, execute the command:
 $ composer test
 ```
 
-This will run [Psalm][3], [PHPUnit][4], [Infection][5] and a [PHP-CS-Fixer][6]
+This will run [Psalm][4], [PHPUnit][5], [Infection][6] and a [PHP-CS-Fixer][7]
 check, but you can run them individually like this:
 
 ```bash
@@ -147,7 +164,8 @@ $ composer cs-check
 
 [1]: https://github.com/thephpleague/flysystem
 [2]: https://getcomposer.org/doc/00-intro.md
-[3]: https://psalm.dev
-[4]: https://phpunit.de
-[5]: https://infection.github.io
-[6]: https://cs.symfony.com/
+[3]: https://github.com/symfony/serializer
+[4]: https://psalm.dev
+[5]: https://phpunit.de
+[6]: https://infection.github.io
+[7]: https://cs.symfony.com/
