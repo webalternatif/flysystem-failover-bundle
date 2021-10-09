@@ -9,6 +9,7 @@
 ### ✨ New features
 
   * Add command to list remaining messages to process
+  * `FailoverAdapter` now implements [`CompositeFilesystemAdapter`](https://github.com/webalternatif/flysystem-composite/blob/v0.1.0/src/CompositeFilesystemAdapter.php)
 
 ## v0.2.1 (September 16, 2021)
 

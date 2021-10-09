@@ -24,15 +24,13 @@ class ReplicateFileHandler implements MessageHandlerInterface
             $message->getFailoverAdapter()
         );
 
-        $sourceAdapter = $failoverAdapter
-            ->getInnerAdapter($message->getInnerSourceAdapter())
-            ->getAdapter()
-        ;
+        $sourceAdapter = $failoverAdapter->getInnerAdapter(
+            $message->getInnerSourceAdapter()
+        );
 
-        $destinationAdapter = $failoverAdapter
-            ->getInnerAdapter($message->getInnerDestinationAdapter())
-            ->getAdapter()
-        ;
+        $destinationAdapter = $failoverAdapter->getInnerAdapter(
+            $message->getInnerDestinationAdapter()
+        );
 
         try {
             $destinationAdapter->writeStream(

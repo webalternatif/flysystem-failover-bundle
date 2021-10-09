@@ -6,24 +6,31 @@ namespace Webf\FlysystemFailoverBundle\Flysystem;
 
 use ArrayIterator;
 use IteratorAggregate;
+use League\Flysystem\FilesystemAdapter;
 use Webf\FlysystemFailoverBundle\Exception\FailoverAdapterNotFoundException;
 
+/**
+ * @template T of FilesystemAdapter
+ */
 class FailoverAdaptersLocator implements FailoverAdaptersLocatorInterface, IteratorAggregate
 {
     private bool $iterableConsumed = false;
 
     /**
-     * @var array<string, FailoverAdapter>
+     * @var array<string, FailoverAdapter<T>>
      */
     private array $failoverAdapters = [];
 
     /**
-     * @param iterable<FailoverAdapter> $adaptersIterable
+     * @param iterable<FailoverAdapter<T>> $adaptersIterable
      */
     public function __construct(private iterable $adaptersIterable)
     {
     }
 
+    /**
+     * @return FailoverAdapter<T>
+     */
     public function get(string $name): FailoverAdapter
     {
         if (key_exists($name, $this->failoverAdapters)) {
@@ -46,7 +53,7 @@ class FailoverAdaptersLocator implements FailoverAdaptersLocatorInterface, Itera
     }
 
     /**
-     * @return ArrayIterator<string, FailoverAdapter>
+     * @return ArrayIterator<string, FailoverAdapter<T>>
      */
     public function getIterator(): ArrayIterator
     {

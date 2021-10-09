@@ -12,6 +12,7 @@ use League\Flysystem\UnableToCheckFileExistence;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToRetrieveMetadata;
 use League\Flysystem\UnableToWriteFile;
+use Webf\Flysystem\Composite\CompositeFilesystemAdapter;
 use Webf\FlysystemFailoverBundle\Exception\InnerAdapterNotFoundException;
 use Webf\FlysystemFailoverBundle\Exception\UnsupportedOperationException;
 use Webf\FlysystemFailoverBundle\Message\DeleteDirectory;
@@ -19,10 +20,14 @@ use Webf\FlysystemFailoverBundle\Message\DeleteFile;
 use Webf\FlysystemFailoverBundle\Message\ReplicateFile;
 use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
 
-class FailoverAdapter implements FilesystemAdapter
+/**
+ * @template T of FilesystemAdapter
+ * @template-implements CompositeFilesystemAdapter<InnerAdapter<T>>
+ */
+class FailoverAdapter implements CompositeFilesystemAdapter
 {
     /**
-     * @param iterable<int, InnerAdapter> $adapters
+     * @param iterable<int, InnerAdapter<T>> $adapters
      */
     public function __construct(
         private string $name,
@@ -35,7 +40,7 @@ class FailoverAdapter implements FilesystemAdapter
     {
         foreach ($this->adapters as $adapter) {
             try {
-                return $adapter->getAdapter()->fileExists($path);
+                return $adapter->fileExists($path);
             } catch (FilesystemException) {
                 // TODO log exception ?
             }
@@ -50,7 +55,7 @@ class FailoverAdapter implements FilesystemAdapter
 
         foreach ($this->adapters as $name => $adapter) {
             try {
-                $adapter->getAdapter()->write($path, $contents, $config);
+                $adapter->write($path, $contents, $config);
                 $writtenAdapter = $name;
                 break;
             } catch (FilesystemException) {
@@ -84,7 +89,7 @@ class FailoverAdapter implements FilesystemAdapter
 
         foreach ($this->adapters as $name => $adapter) {
             try {
-                $adapter->getAdapter()->writeStream($path, $contents, $config);
+                $adapter->writeStream($path, $contents, $config);
                 $writtenAdapter = $name;
                 break;
             } catch (FilesystemException) {
@@ -116,7 +121,7 @@ class FailoverAdapter implements FilesystemAdapter
     {
         foreach ($this->adapters as $adapter) {
             try {
-                return $adapter->getAdapter()->read($path);
+                return $adapter->read($path);
             } catch (FilesystemException) {
                 // TODO log exception ?
             }
@@ -129,7 +134,7 @@ class FailoverAdapter implements FilesystemAdapter
     {
         foreach ($this->adapters as $adapter) {
             try {
-                return $adapter->getAdapter()->readStream($path);
+                return $adapter->readStream($path);
             } catch (FilesystemException) {
                 // TODO log exception ?
             }
@@ -142,7 +147,7 @@ class FailoverAdapter implements FilesystemAdapter
     {
         foreach ($this->adapters as $name => $adapter) {
             try {
-                $adapter->getAdapter()->delete($path);
+                $adapter->delete($path);
             } catch (FilesystemException) {
                 // TODO log exception ?
                 $this->messageRepository->push(
@@ -156,7 +161,7 @@ class FailoverAdapter implements FilesystemAdapter
     {
         foreach ($this->adapters as $name => $adapter) {
             try {
-                $adapter->getAdapter()->deleteDirectory($path);
+                $adapter->deleteDirectory($path);
             } catch (FilesystemException) {
                 // TODO log exception ?
                 $this->messageRepository->push(
@@ -180,7 +185,7 @@ class FailoverAdapter implements FilesystemAdapter
     {
         foreach ($this->adapters as $adapter) {
             try {
-                return $adapter->getAdapter()->visibility($path);
+                return $adapter->visibility($path);
             } catch (FilesystemException) {
                 // TODO log exception ?
             }
@@ -193,7 +198,7 @@ class FailoverAdapter implements FilesystemAdapter
     {
         foreach ($this->adapters as $adapter) {
             try {
-                return $adapter->getAdapter()->mimeType($path);
+                return $adapter->mimeType($path);
             } catch (FilesystemException) {
                 // TODO log exception ?
             }
@@ -206,7 +211,7 @@ class FailoverAdapter implements FilesystemAdapter
     {
         foreach ($this->adapters as $adapter) {
             try {
-                return $adapter->getAdapter()->lastModified($path);
+                return $adapter->lastModified($path);
             } catch (FilesystemException) {
                 // TODO log exception ?
             }
@@ -219,7 +224,7 @@ class FailoverAdapter implements FilesystemAdapter
     {
         foreach ($this->adapters as $adapter) {
             try {
-                return $adapter->getAdapter()->fileSize($path);
+                return $adapter->fileSize($path);
             } catch (FilesystemException) {
                 // TODO log exception ?
             }
@@ -263,7 +268,7 @@ class FailoverAdapter implements FilesystemAdapter
     }
 
     /**
-     * @return iterable<int, InnerAdapter>
+     * @return iterable<int, InnerAdapter<T>>
      */
     public function getInnerAdapters(): iterable
     {

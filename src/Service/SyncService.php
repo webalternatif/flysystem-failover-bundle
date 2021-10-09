@@ -127,7 +127,7 @@ class SyncService
 
             try {
                 $timeShift = $innerAdapter->getTimeShift();
-                foreach ($innerAdapter->getAdapter()->listContents('/', true) as $item) {
+                foreach ($innerAdapter->listContents('/', true) as $item) {
                     if ($item->isFile()) {
                         $cache->addFile($item, $i, $timeShift);
                     }

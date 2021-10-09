@@ -22,7 +22,6 @@ class DeleteFileHandler implements MessageHandlerInterface
         $adapter = $this->adaptersLocator
             ->get($message->getFailoverAdapter())
             ->getInnerAdapter($message->getInnerDestinationAdapter())
-            ->getAdapter()
         ;
 
         try {
