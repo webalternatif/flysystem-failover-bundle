@@ -1,3 +1,10 @@
+## v0.3.0 (unreleased)
+
+### 💥 Breaking changes
+
+  * Add `getFailoverAdapter()`, `getPath()`, `getInnerSourceAdapter()` and `getInnerDestinationAdapter()` methods to `MessageInterface`
+  * Rename `replicate` action to `replicate_file` in `DoctrineMessageRepository` (needs to remove or rename impacted rows in the database)
+
 ## v0.2.1 (September 16, 2021)
 
 ### 🐛 Bug fixes

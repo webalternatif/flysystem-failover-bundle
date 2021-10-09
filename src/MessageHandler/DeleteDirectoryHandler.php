@@ -21,7 +21,7 @@ class DeleteDirectoryHandler implements MessageHandlerInterface
     {
         $adapter = $this->adaptersLocator
             ->get($message->getFailoverAdapter())
-            ->getInnerAdapter($message->getInnerAdapter())
+            ->getInnerAdapter($message->getInnerDestinationAdapter())
             ->getAdapter()
         ;
 
@@ -33,7 +33,7 @@ class DeleteDirectoryHandler implements MessageHandlerInterface
             $this->messageRepository->push(new DeleteDirectory(
                 $message->getFailoverAdapter(),
                 $message->getPath(),
-                $message->getInnerAdapter(),
+                $message->getInnerDestinationAdapter(),
                 $message->getRetryCount() + 1
             ));
         }

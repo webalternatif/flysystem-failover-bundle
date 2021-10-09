@@ -21,7 +21,7 @@ class DeleteFileHandler implements MessageHandlerInterface
     {
         $adapter = $this->adaptersLocator
             ->get($message->getFailoverAdapter())
-            ->getInnerAdapter($message->getInnerAdapter())
+            ->getInnerAdapter($message->getInnerDestinationAdapter())
             ->getAdapter()
         ;
 
@@ -33,7 +33,7 @@ class DeleteFileHandler implements MessageHandlerInterface
             $this->messageRepository->push(new DeleteFile(
                 $message->getFailoverAdapter(),
                 $message->getPath(),
-                $message->getInnerAdapter(),
+                $message->getInnerDestinationAdapter(),
                 $message->getRetryCount() + 1
             ));
         }

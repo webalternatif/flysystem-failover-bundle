@@ -84,26 +84,9 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
                 'created_at' => ':created_at',
                 'available_at' => ':available_at',
             ])
-        ;
-
-        if ($message instanceof DeleteDirectory || $message instanceof DeleteFile) {
-            $qb->setParameters([
+            ->setParameters([
                 'failover_adapter' => $message->getFailoverAdapter(),
-                'action' => $message instanceof DeleteDirectory ? 'delete_directory' : 'delete_file',
-                'path' => $message->getPath(),
-                'source_adapter' => null,
-                'destination_adapter' => $message->getInnerAdapter(),
-                'retry_count' => $message->getRetryCount(),
-                'created_at' => $now,
-                'available_at' => $availableAt,
-            ], [
-                'created_at' => Types::DATETIME_IMMUTABLE,
-                'available_at' => Types::DATETIME_IMMUTABLE,
-            ]);
-        } elseif ($message instanceof ReplicateFile) {
-            $qb->setParameters([
-                'failover_adapter' => $message->getFailoverAdapter(),
-                'action' => 'replicate',
+                'action' => $this->getAction($message),
                 'path' => $message->getPath(),
                 'source_adapter' => $message->getInnerSourceAdapter(),
                 'destination_adapter' => $message->getInnerDestinationAdapter(),
@@ -113,10 +96,8 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
             ], [
                 'created_at' => Types::DATETIME_IMMUTABLE,
                 'available_at' => Types::DATETIME_IMMUTABLE,
-            ]);
-        } else {
-            throw new InvalidArgumentException('Unsupported message');
-        }
+            ])
+        ;
 
         try {
             if (method_exists($qb, 'executeStatement')) {
@@ -199,7 +180,7 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
                 (int) $data['destination_adapter'],
                 (int) $data['retry_count'],
             ),
-            'replicate' => new ReplicateFile(
+            'replicate_file' => new ReplicateFile(
                 $data['failover_adapter'],
                 $data['path'],
                 (int) $data['source_adapter'],
@@ -225,27 +206,14 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
                 'destination_adapter = :destination_adapter',
             ))
             ->setMaxResults(1)
-        ;
-
-        if ($message instanceof DeleteDirectory || $message instanceof DeleteFile) {
-            $qb->setParameters([
+            ->setParameters([
                 'failover_adapter' => $message->getFailoverAdapter(),
-                'action' => $message instanceof DeleteDirectory ? 'delete_directory' : 'delete_file',
-                'path' => $message->getPath(),
-                'source_adapter' => null,
-                'destination_adapter' => $message->getInnerAdapter(),
-            ]);
-        } elseif ($message instanceof ReplicateFile) {
-            $qb->setParameters([
-                'failover_adapter' => $message->getFailoverAdapter(),
-                'action' => 'replicate',
+                'action' => $this->getAction($message),
                 'path' => $message->getPath(),
                 'source_adapter' => $message->getInnerSourceAdapter(),
                 'destination_adapter' => $message->getInnerDestinationAdapter(),
-            ]);
-        } else {
-            throw new InvalidArgumentException('Unsupported message');
-        }
+            ])
+        ;
 
         try {
             if (method_exists($qb, 'executeQuery')) {
@@ -260,6 +228,16 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
         }
 
         return false !== $result->fetchAssociative();
+    }
+
+    private function getAction(MessageInterface $message): string
+    {
+        return match (get_class($message)) {
+            DeleteDirectory::class => 'delete_directory',
+            DeleteFile::class => 'delete_file',
+            ReplicateFile::class => 'replicate_file',
+            default => throw new InvalidArgumentException('Unsupported message')
+        };
     }
 
     private function setup(): void

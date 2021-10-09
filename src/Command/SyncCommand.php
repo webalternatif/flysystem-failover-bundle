@@ -170,10 +170,10 @@ class SyncCommand extends Command
                     'Dispatching message to delete file ' .
                     '<comment>%s</comment> from storage %s...',
                     $event->getMessage()->getPath(),
-                    $event->getMessage()->getInnerAdapter(),
+                    $event->getMessage()->getInnerDestinationAdapter(),
                 ));
 
-                $stats->incrDeleted($event->getMessage()->getInnerAdapter());
+                $stats->incrDeleted($event->getMessage()->getInnerDestinationAdapter());
             }
         );
 

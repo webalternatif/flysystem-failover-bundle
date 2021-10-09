@@ -24,7 +24,12 @@ class DeleteFile implements MessageInterface
         return $this->path;
     }
 
-    public function getInnerAdapter(): int
+    public function getInnerSourceAdapter(): ?int
+    {
+        return null;
+    }
+
+    public function getInnerDestinationAdapter(): int
     {
         return $this->innerAdapter;
     }
