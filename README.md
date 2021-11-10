@@ -11,6 +11,10 @@
 This bundle allows creating failover [Flysystem][1] adapters and provides
 tooling to keep underlying storages synchronized.
 
+💡 Tip: you may want to use this bundle through
+[webalternatif/flysystem-dsn-bundle][2], which makes the configuration
+[much easier][3].
+
 ## How it works
 
 This bundle allows you to create failover adapters for Flysystem. A failover
@@ -28,7 +32,7 @@ command call (see [Processing messages](#processing-messages) section).
 ## Installation
 
 Make sure Composer is installed globally, as explained in the
-[installation chapter][2] of the Composer documentation.
+[installation chapter][4] of the Composer documentation.
 
 ### Applications that use Symfony Flex
 
@@ -126,7 +130,7 @@ $ bin/console webf:flysystem-failover:list-messages
 Results are paginated by default, you can use `--limit` (`-l`) and `--page`
 (`-p`) to configure pagination.
 
-If [`symfony/serializer`][3] is installed, the `--format` (`-f`) becomes
+If [`symfony/serializer`][5] is installed, the `--format` (`-f`) becomes
 available and allows you to display output in `csv`, `json` or `xml`.
 
 Use `--help` for more info.
@@ -152,7 +156,7 @@ To run all tests, execute the command:
 $ composer test
 ```
 
-This will run [Psalm][4], [PHPUnit][5], [Infection][6] and a [PHP-CS-Fixer][7]
+This will run [Psalm][6], [PHPUnit][7], [Infection][8] and a [PHP-CS-Fixer][9]
 check, but you can run them individually like this:
 
 ```bash
@@ -163,9 +167,11 @@ $ composer cs-check
 ```
 
 [1]: https://github.com/thephpleague/flysystem
-[2]: https://getcomposer.org/doc/00-intro.md
-[3]: https://github.com/symfony/serializer
-[4]: https://psalm.dev
-[5]: https://phpunit.de
-[6]: https://infection.github.io
-[7]: https://cs.symfony.com/
+[2]: https://github.com/webalternatif/flysystem-dsn-bundle
+[3]: https://github.com/webalternatif/flysystem-dsn#failover
+[4]: https://getcomposer.org/doc/00-intro.md
+[5]: https://github.com/symfony/serializer
+[6]: https://psalm.dev
+[7]: https://phpunit.de
+[8]: https://infection.github.io
+[9]: https://cs.symfony.com/
