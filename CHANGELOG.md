@@ -2,51 +2,51 @@
 
 ### 🐛 Bug fixes
 
-* Add composer conflict with doctrine/dbal < 2.13.1
+* Add composer conflict with doctrine/dbal < 2.13.1 ([e2e63df](https://github.com/webalternatif/flysystem-failover-bundle/commit/e2e63dfdf674215af47160452bfa9345287c5696))
 
 ## v0.3.1 (November 17, 2021)
 
 ### 🐛 Bug fixes
 
-* Fix Symfony 4 compatibility
+* Fix Symfony 4 compatibility ([06c2a32](https://github.com/webalternatif/flysystem-failover-bundle/commit/06c2a32b38ca45fd128fe6aba0bef07bef6248e5))
 
 ## v0.3.0 (October 9, 2021)
 
 ### 💥 Breaking changes
 
-* Add `findBy()` method to `MessageRepositoryInterface`
-* Add `getFailoverAdapter()`, `getPath()`, `getInnerSourceAdapter()` and `getInnerDestinationAdapter()` methods to `MessageInterface`
-* Rename `replicate` action to `replicate_file` in `DoctrineMessageRepository` (needs to remove or rename impacted rows in the database)
+* Add `findBy()` method to `MessageRepositoryInterface` ([a08be35](https://github.com/webalternatif/flysystem-failover-bundle/commit/a08be35ab8b6971fa3acdfea50838071cb2200f9))
+* Add `getFailoverAdapter()`, `getPath()`, `getInnerSourceAdapter()` and `getInnerDestinationAdapter()` methods to `MessageInterface` ([d42de54](https://github.com/webalternatif/flysystem-failover-bundle/commit/d42de547afae0b0a9369a30713140002ffaaf8ff))
+* Rename `replicate` action to `replicate_file` in `DoctrineMessageRepository` (needs to remove or rename impacted rows in the database) ([d42de54](https://github.com/webalternatif/flysystem-failover-bundle/commit/d42de547afae0b0a9369a30713140002ffaaf8ff))
 
 ### ✨ New features
 
-* Add command to list remaining messages to process
-* `FailoverAdapter` now implements [`CompositeFilesystemAdapter`](https://github.com/webalternatif/flysystem-composite/blob/v0.1.0/src/CompositeFilesystemAdapter.php)
+* Add command to list remaining messages to process ([a08be35](https://github.com/webalternatif/flysystem-failover-bundle/commit/a08be35ab8b6971fa3acdfea50838071cb2200f9))
+* `FailoverAdapter` now implements [`CompositeFilesystemAdapter`](https://github.com/webalternatif/flysystem-composite/blob/v0.1.0/src/CompositeFilesystemAdapter.php) ([b5faab9](https://github.com/webalternatif/flysystem-failover-bundle/commit/b5faab9b405241a75d5c9b11741b589088b372d2))
 
 ## v0.2.1 (September 16, 2021)
 
 ### 🐛 Bug fixes
 
-* Fix `DoctrineMessageRepository` issues with SQLite driver
+* Fix `DoctrineMessageRepository` issues with SQLite driver ([99198c2](https://github.com/webalternatif/flysystem-failover-bundle/commit/99198c2edb93c612cbe79b99caefe522313a41a9))
 
 ### ⚡ Performance improvements
 
-* Retry pop 10 times before returning null in `DoctrineMessageRepository`
+* Retry pop 10 times before returning null in `DoctrineMessageRepository` ([66894a0](https://github.com/webalternatif/flysystem-failover-bundle/commit/66894a08145b1f72a5fd6207b765623570d2c0be))
 
 ## v0.2.0 (September 14, 2021)
 
 ### 💥 Breaking changes
 
-* Rename tag `webf_flysystem_failovermessage_handler` into `webf_flysystem_failover.message_handler`
+* Rename tag `webf_flysystem_failovermessage_handler` into `webf_flysystem_failover.message_handler` ([69cda6e](https://github.com/webalternatif/flysystem-failover-bundle/commit/69cda6e37a87f12ecc143faa84e4a027bdbc95ae))
 
 ### ✨ New features
 
-* Register commands and services even if there is no adapter in configuration
+* Register commands and services even if there is no adapter in configuration ([3d0a7a0](https://github.com/webalternatif/flysystem-failover-bundle/commit/3d0a7a0ddbb1baf41839716ab2b3be1783a4e7e4))
 
 ### ⚡ Performance improvements
 
-* Consume `FailoverAdaptersLocator`'s iterator only when it's necessary
+* Consume `FailoverAdaptersLocator`'s iterator only when it's necessary ([aca722a](https://github.com/webalternatif/flysystem-failover-bundle/commit/aca722a35f2626ede7ab8f275c4b966f48e23cec))
 
 ## v0.1.0 (September 10, 2021)
 
-First version.
+First version. ([351e632](https://github.com/webalternatif/flysystem-failover-bundle/commit/351e6328c5bac8f80c34aaaae4ae01e820898056))
