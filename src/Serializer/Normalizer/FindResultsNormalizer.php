@@ -17,7 +17,7 @@ class FindResultsNormalizer implements NormalizerInterface, CacheableSupportsMet
 {
     public const SUPPORTED_FORMATS = ['csv', 'json', 'xml'];
 
-    public function normalize($object, string $format = null, array $context = []): array
+    public function normalize($object, $format = null, array $context = []): array
     {
         if (!$object instanceof FindResults) {
             throw new InvalidArgumentException(sprintf('The object must be an instance of "%s".', FindResults::class));
@@ -35,7 +35,7 @@ class FindResultsNormalizer implements NormalizerInterface, CacheableSupportsMet
         };
     }
 
-    public function supportsNormalization($data, string $format = null): bool
+    public function supportsNormalization($data, $format = null): bool
     {
         return $data instanceof FindResults && in_array($format, self::SUPPORTED_FORMATS);
     }

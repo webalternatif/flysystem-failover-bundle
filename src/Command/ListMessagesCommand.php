@@ -61,7 +61,7 @@ class ListMessagesCommand extends Command
 
                 $output->writeln($this->serializer->serialize($results, $format, $context));
 
-                return Command::SUCCESS;
+                return 0;
             }
         }
 
@@ -135,7 +135,7 @@ class ListMessagesCommand extends Command
             ));
         }
 
-        return Command::SUCCESS;
+        return 0;
     }
 
     protected function configure(): void
