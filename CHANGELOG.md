@@ -1,3 +1,9 @@
+## v0.3.2 (unreleased)
+
+### 🐛 Bug fixes
+
+* Add composer conflict with doctrine/dbal < 2.13.1
+
 ## v0.3.1 (November 17, 2021)
 
 ### 🐛 Bug fixes
