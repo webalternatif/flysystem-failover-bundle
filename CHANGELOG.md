@@ -1,5 +1,9 @@
 ## v0.3.2 (unreleased)
 
+### ✨ New features
+
+* Add support of PHP 8.1
+
 ### 🐛 Bug fixes
 
 * Add composer conflict with doctrine/dbal < 2.13.1 ([e2e63df](https://github.com/webalternatif/flysystem-failover-bundle/commit/e2e63dfdf674215af47160452bfa9345287c5696))
