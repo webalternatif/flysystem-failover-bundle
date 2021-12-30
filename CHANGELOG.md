@@ -1,8 +1,8 @@
-## v0.3.2 (unreleased)
+## v0.3.2 (December 30, 2021)
 
 ### ✨ New features
 
-* Add support of PHP 8.1
+* Add support of PHP 8.1 ([5926da6](https://github.com/webalternatif/flysystem-failover-bundle/commit/5926da67e5392b33e40ff88e3619b3a0e28223d8))
 
 ### 🐛 Bug fixes
 
