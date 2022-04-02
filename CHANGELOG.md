@@ -1,8 +1,8 @@
-## v0.4.0 (unreleased)
+## v0.4.0 (April 2, 2022)
 
 ### 💥 Breaking changes
 
-* Bump league/flysystem to version `^3.0`
+* Bump league/flysystem to version `^3.0` ([4882390](https://github.com/webalternatif/flysystem-failover-bundle/commit/48823907115faddf121f1bea15fcd09315c6956d))
 
 ## v0.3.2 (December 30, 2021)
 
