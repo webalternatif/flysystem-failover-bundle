@@ -8,6 +8,7 @@ use League\Flysystem\Config;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
+use League\Flysystem\UnableToCheckDirectoryExistence;
 use League\Flysystem\UnableToCheckFileExistence;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToRetrieveMetadata;
@@ -47,6 +48,19 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         }
 
         throw UnableToCheckFileExistence::forLocation($path);
+    }
+
+    public function directoryExists(string $path): bool
+    {
+        foreach ($this->adapters as $adapter) {
+            try {
+                return $adapter->directoryExists($path);
+            } catch (FilesystemException) {
+                // TODO log exception ?
+            }
+        }
+
+        throw UnableToCheckDirectoryExistence::forLocation($path);
     }
 
     public function write(string $path, string $contents, Config $config): void

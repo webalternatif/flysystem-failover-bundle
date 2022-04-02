@@ -1,0 +1,56 @@
+# Waiting for https://github.com/thephpleague/flysystem/pull/1438
+
+diff --git a/InMemoryFile.php b/InMemoryFile.php
+index 871b670..a7513b7 100644
+--- a/InMemoryFile.php
++++ b/InMemoryFile.php
+@@ -27,10 +27,10 @@ class InMemoryFile
+      */
+     private $visibility;
+
+-    public function updateContents(string $contents): void
++    public function updateContents(string $contents, ?int $timestamp): void
+     {
+         $this->contents = $contents;
+-        $this->lastModified = time();
++        $this->lastModified = $timestamp ?: time();
+     }
+
+     public function lastModified(): int
+@@ -75,4 +75,12 @@ public function visibility(): ?string
+     {
+         return $this->visibility;
+     }
++
++    public function withLastModified(int $lastModified): self
++    {
++        $clone = clone $this;
++        $clone->lastModified = $lastModified;
++
++        return $clone;
++    }
+ }
+diff --git a/InMemoryFilesystemAdapter.php b/InMemoryFilesystemAdapter.php
+index 4c32bf1..a441bf1 100644
+--- a/InMemoryFilesystemAdapter.php
++++ b/InMemoryFilesystemAdapter.php
+@@ -51,7 +51,7 @@ public function write(string $path, string $contents, Config $config): void
+     {
+         $path = $this->preparePath($path);
+         $file = $this->files[$path] = $this->files[$path] ?? new InMemoryFile();
+-        $file->updateContents($contents);
++        $file->updateContents($contents, $config->get('timestamp'));
+
+         $visibility = $config->get(Config::OPTION_VISIBILITY, $this->defaultVisibility);
+         $file->setVisibility($visibility);
+@@ -231,7 +231,9 @@ public function copy(string $source, string $destination, Config $config): void
+             throw UnableToCopyFile::fromLocationTo($source, $destination);
+         }
+
+-        $this->files[$destination] = clone $this->files[$source];
++        $lastModified = $config->get('timestamp', time());
++
++        $this->files[$destination] = $this->files[$source]->withLastModified($lastModified);
+     }
+
+     private function preparePath(string $path): string

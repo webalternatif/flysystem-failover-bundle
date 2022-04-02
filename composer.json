@@ -13,22 +13,23 @@
     ],
     "require": {
         "php": "8.0.* || 8.1.*",
-        "league/flysystem": "^2.0",
+        "league/flysystem": "^3.0",
         "nyholm/dsn": "^2.0",
         "symfony/config": "^4.4 || ^5.2",
         "symfony/console": "^4.4 || ^5.2",
         "symfony/dependency-injection": "^4.4 || ^5.2",
         "symfony/event-dispatcher": "^4.4 || ^5.2",
         "symfony/http-kernel": "^4.4 || ^5.2",
-        "webalternatif/flysystem-composite": "^0.1.0"
+        "webalternatif/flysystem-composite": "^0.2.0"
     },
     "require-dev": {
+        "cweagans/composer-patches": "^1.7",
         "doctrine/common": "^3.1",
         "doctrine/dbal": "^2.13",
         "doctrine/orm": "^2.9",
         "friendsofphp/php-cs-fixer": "^3.1",
         "infection/infection": "^0.25.0",
-        "league/flysystem-memory": "2.1.0-alpha.1",
+        "league/flysystem-memory": "^3.0",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.15.1",
         "symfony/serializer": "^5.3",
@@ -40,12 +41,6 @@
     "suggest": {
         "symfony/serializer": "To enable --format option in console commands"
     },
-    "repositories": [
-        {
-            "type": "github",
-            "url": "https://github.com/chapa/flysystem-memory.git"
-        }
-    ],
     "scripts": {
         "cs-check": "php-cs-fixer fix --dry-run",
         "cs-fix": "php-cs-fixer fix",
@@ -67,6 +62,13 @@
     "config": {
         "bin-dir": "bin",
         "sort-packages": true
+    },
+    "extra": {
+        "patches": {
+            "league/flysystem-memory": {
+                "Add timestamp option": "patches/flysystem-memory/add-timestamp-option.diff"
+            }
+        }
     },
     "archive": {
         "exclude": [
