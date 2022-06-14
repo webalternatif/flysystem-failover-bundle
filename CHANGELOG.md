@@ -1,8 +1,8 @@
-## v0.4.1 (unreleased)
+## v0.4.1 (June 14, 2022)
 
 ### ✨ New features
 
-* Allow Symfony components `^6.0`
+* Allow Symfony components `^6.0` ([0d6e0d1](https://github.com/webalternatif/flysystem-failover-bundle/commit/0d6e0d141dfed4795f004e6bd3c4dac40b526444))
 
 ## v0.4.0 (April 2, 2022)
 
