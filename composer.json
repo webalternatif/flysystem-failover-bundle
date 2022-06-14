@@ -23,7 +23,6 @@
         "webalternatif/flysystem-composite": "^0.2.0"
     },
     "require-dev": {
-        "cweagans/composer-patches": "^1.7",
         "doctrine/common": "^3.1",
         "doctrine/dbal": "^2.13",
         "doctrine/orm": "^2.9",
@@ -62,13 +61,6 @@
     "config": {
         "bin-dir": "bin",
         "sort-packages": true
-    },
-    "extra": {
-        "patches": {
-            "league/flysystem-memory": {
-                "Add timestamp option": "patches/flysystem-memory/add-timestamp-option.diff"
-            }
-        }
     },
     "archive": {
         "exclude": [
