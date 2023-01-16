@@ -1,8 +1,8 @@
-## v0.4.2 (unreleased)
+## v0.4.2 (January 16, 2023)
 
 ### ✨ New features
 
-* Add support of PHP 8.2
+* Add support of PHP 8.2 ([#1](https://github.com/webalternatif/flysystem-failover-bundle/pull/1))
 
 ## v0.4.1 (June 14, 2022)
 
