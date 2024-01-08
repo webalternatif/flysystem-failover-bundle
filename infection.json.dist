@@ -8,7 +8,7 @@
     "text": "var\/log\/infection.log",
     "perMutator": "php://stdout",
     "badge": {
-      "branch": "master"
+      "branch": "main"
     }
   },
   "tmpDir": "var/cache"

@@ -1,12 +1,12 @@
 # Flysystem failover bundle
 
 [![Source code](https://img.shields.io/badge/source-GitHub-blue)](https://github.com/webalternatif/flysystem-failover-bundle)
-[![Software license](https://img.shields.io/github/license/webalternatif/flysystem-failover-bundle)](https://github.com/webalternatif/flysystem-failover-bundle/blob/master/LICENSE)
+[![Software license](https://img.shields.io/github/license/webalternatif/flysystem-failover-bundle)](https://github.com/webalternatif/flysystem-failover-bundle/blob/main/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/webalternatif/flysystem-failover-bundle)](https://github.com/webalternatif/flysystem-failover-bundle/issues)
-[![Test status](https://img.shields.io/github/actions/workflow/status/webalternatif/flysystem-failover-bundle/test.yml?branch=master&label=tests)](https://github.com/webalternatif/flysystem-failover-bundle/actions/workflows/test.yml)
+[![Test status](https://img.shields.io/github/actions/workflow/status/webalternatif/flysystem-failover-bundle/test.yml?branch=main&label=tests)](https://github.com/webalternatif/flysystem-failover-bundle/actions/workflows/test.yml)
 [![Psalm coverage](https://shepherd.dev/github/webalternatif/flysystem-failover-bundle/coverage.svg)](https://psalm.dev)
 [![Psalm level](https://shepherd.dev/github/webalternatif/flysystem-failover-bundle/level.svg)](https://psalm.dev)
-[![Infection MSI](https://badge.stryker-mutator.io/github.com/webalternatif/flysystem-failover-bundle/master)](https://infection.github.io)
+[![Infection MSI](https://badge.stryker-mutator.io/github.com/webalternatif/flysystem-failover-bundle/main)](https://infection.github.io)
 
 This bundle allows creating failover [Flysystem][1] adapters and provides
 tooling to keep underlying storages synchronized.
