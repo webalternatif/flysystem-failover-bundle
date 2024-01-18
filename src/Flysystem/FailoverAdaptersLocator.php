@@ -11,6 +11,9 @@ use Webf\FlysystemFailoverBundle\Exception\FailoverAdapterNotFoundException;
 
 /**
  * @template T of FilesystemAdapter
+ *
+ * @template-implements FailoverAdaptersLocatorInterface<T>
+ * @template-implements IteratorAggregate<string, FailoverAdapter<T>>
  */
 class FailoverAdaptersLocator implements FailoverAdaptersLocatorInterface, IteratorAggregate
 {

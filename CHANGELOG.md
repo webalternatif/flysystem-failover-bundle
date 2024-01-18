@@ -1,5 +1,9 @@
 ## v0.4.3 (unreleased)
 
+### ✨ New features
+
+* Add support of PHP 8.3
+
 ### 🐛 Bug fixes
 
 * Use Guzzle's CachingStream to replicate a file ([#5](https://github.com/webalternatif/flysystem-failover-bundle/pull/5))

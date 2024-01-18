@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\CachingStream;
 use GuzzleHttp\Psr7\StreamWrapper;
 use GuzzleHttp\Psr7\Utils;
 use League\Flysystem\Config;
+use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
 use Webf\FlysystemFailoverBundle\Flysystem\FailoverAdaptersLocatorInterface;
 use Webf\FlysystemFailoverBundle\Message\ReplicateFile;
@@ -15,6 +16,11 @@ use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
 
 class ReplicateFileHandler implements MessageHandlerInterface
 {
+    /**
+     * @template T of FilesystemAdapter
+     *
+     * @param FailoverAdaptersLocatorInterface<T> $adaptersLocator
+     */
     public function __construct(
         private FailoverAdaptersLocatorInterface $adaptersLocator,
         private MessageRepositoryInterface $messageRepository,
