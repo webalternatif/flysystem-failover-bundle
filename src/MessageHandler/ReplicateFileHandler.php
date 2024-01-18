@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Webf\FlysystemFailoverBundle\MessageHandler;
 
+use GuzzleHttp\Psr7\CachingStream;
+use GuzzleHttp\Psr7\StreamWrapper;
+use GuzzleHttp\Psr7\Utils;
 use League\Flysystem\Config;
 use League\Flysystem\FilesystemException;
 use Webf\FlysystemFailoverBundle\Flysystem\FailoverAdaptersLocatorInterface;
@@ -35,7 +38,13 @@ class ReplicateFileHandler implements MessageHandlerInterface
         try {
             $destinationAdapter->writeStream(
                 $message->getPath(),
-                $sourceAdapter->readStream($message->getPath()),
+                StreamWrapper::getResource(
+                    new CachingStream(
+                        Utils::streamFor(
+                            $sourceAdapter->readStream($message->getPath())
+                        )
+                    )
+                ),
                 new Config()
             );
         } catch (FilesystemException) {
