@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webf\FlysystemFailoverBundle\Service;
 
+use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\StorageAttributes;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -28,6 +29,11 @@ class SyncService
     public const EXTRA_FILES_DELETE = 'delete';
     public const EXTRA_FILES_IGNORE = 'ignore';
 
+    /**
+     * @template T of FilesystemAdapter
+     *
+     * @param FailoverAdaptersLocatorInterface<T> $failoverAdaptersLocator
+     */
     public function __construct(
         private EventDispatcherInterface $eventDispatcher,
         private FailoverAdaptersLocatorInterface $failoverAdaptersLocator,
@@ -88,7 +94,7 @@ class SyncService
             {
                 $lastModified = $file->lastModified();
 
-                $this->cache[$adapter][$file->path()] = $lastModified
+                $this->cache[$adapter][$file->path()] = $lastModified !== null
                     ? $lastModified - $timeShift
                     : 0;
             }

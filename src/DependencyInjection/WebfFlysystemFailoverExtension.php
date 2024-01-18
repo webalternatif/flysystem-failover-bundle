@@ -227,7 +227,7 @@ class WebfFlysystemFailoverExtension extends Extension
                         ->setArguments([
                             new Reference(sprintf(
                                 'doctrine.dbal.%s_connection',
-                                $dsn->getHost() ?: 'default'
+                                $dsn->getHost() ?? 'default'
                             )),
                         ])
                 );

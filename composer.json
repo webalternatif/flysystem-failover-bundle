@@ -31,9 +31,9 @@
         "infection/infection": "^0.25.0",
         "league/flysystem-memory": "^3.0",
         "phpunit/phpunit": "^9.5",
-        "psalm/plugin-phpunit": "^0.15.1",
+        "psalm/plugin-phpunit": "^0.18.4",
         "symfony/serializer": "^5.3",
-        "vimeo/psalm": "^4.10"
+        "vimeo/psalm": "^5.19"
     },
     "conflict": {
         "doctrine/dbal": "<2.13.1"
