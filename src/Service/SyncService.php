@@ -94,7 +94,7 @@ class SyncService
             {
                 $lastModified = $file->lastModified();
 
-                $this->cache[$adapter][$file->path()] = $lastModified !== null
+                $this->cache[$adapter][$file->path()] = null !== $lastModified
                     ? $lastModified - $timeShift
                     : 0;
             }
