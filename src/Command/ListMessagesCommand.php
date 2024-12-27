@@ -23,8 +23,6 @@ use Webf\FlysystemFailoverBundle\Serializer\Normalizer\FindResultsNormalizer;
 
 class ListMessagesCommand extends Command
 {
-    protected static string $defaultName = 'webf:flysystem-failover:list-messages';
-
     public function __construct(
         private FailoverAdaptersLocatorInterface $failoverAdaptersLocator,
         private MessageRepositoryInterface $messageRepository,
@@ -140,6 +138,11 @@ class ListMessagesCommand extends Command
 
     protected function configure(): void
     {
+        $this
+            ->setName('webf:flysystem-failover:list-messages')
+            ->setDescription('List messages of the repository')
+        ;
+
         $adapters = array_keys(
             iterator_to_array($this->failoverAdaptersLocator)
         );
@@ -191,8 +194,6 @@ class ListMessagesCommand extends Command
                 'Pretty print json and xml format outputs'
             );
         }
-
-        $this->setDescription('List messages of the repository');
     }
 
     private function getStringOption(InputInterface $input, string $option): ?string

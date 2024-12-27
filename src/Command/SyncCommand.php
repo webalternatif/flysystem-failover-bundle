@@ -24,8 +24,6 @@ use Webf\FlysystemFailoverBundle\Service\SyncService;
 
 class SyncCommand extends Command
 {
-    protected static string $defaultName = 'webf:flysystem-failover:sync';
-
     public function __construct(
         private EventDispatcherInterface $eventDispatcher,
         private FailoverAdaptersLocatorInterface $failoverAdaptersLocator,
@@ -223,6 +221,14 @@ class SyncCommand extends Command
 
     protected function configure(): void
     {
+        $this
+            ->setName('webf:flysystem-failover:sync')
+            ->setDescription(
+                'Synchronize storages to replicate all files present in the ' .
+                'first one to the others'
+            )
+        ;
+
         $adapters = array_keys(
             iterator_to_array($this->failoverAdaptersLocator)
         );
@@ -260,11 +266,6 @@ class SyncCommand extends Command
             mode: InputOption::VALUE_NONE,
             description: 'Do not replicate files already present in ' .
                 'secondary storages, even if the modification date is older.'
-        );
-
-        $this->setDescription(
-            'Synchronize storages to replicate all files present in the ' .
-            'first one to the others'
         );
     }
 }
