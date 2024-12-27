@@ -15,6 +15,7 @@ use Webf\Flysystem\Composite\CompositeFilesystemAdapter;
  * }
  *
  * @template T of FilesystemAdapter
+ *
  * @template-implements CompositeFilesystemAdapter<T>
  */
 class InnerAdapter implements CompositeFilesystemAdapter

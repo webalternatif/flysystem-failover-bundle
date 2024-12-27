@@ -11,7 +11,7 @@ class ReplicateFile implements MessageInterface
         private string $path,
         private int $innerSourceAdapter,
         private int $innerDestinationAdapter,
-        private int $retryCount = 0
+        private int $retryCount = 0,
     ) {
     }
 

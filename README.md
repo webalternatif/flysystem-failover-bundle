@@ -6,7 +6,7 @@
 [![Test status](https://img.shields.io/github/actions/workflow/status/webalternatif/flysystem-failover-bundle/test.yml?branch=main&label=tests)](https://github.com/webalternatif/flysystem-failover-bundle/actions/workflows/test.yml)
 [![Psalm coverage](https://shepherd.dev/github/webalternatif/flysystem-failover-bundle/coverage.svg)](https://psalm.dev)
 [![Psalm level](https://shepherd.dev/github/webalternatif/flysystem-failover-bundle/level.svg)](https://psalm.dev)
-[![Infection MSI](https://badge.stryker-mutator.io/github.com/webalternatif/flysystem-failover-bundle/main)](https://infection.github.io)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fwebalternatif%2Fflysystem-failover-bundle%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/webalternatif/flysystem-failover-bundle/main)
 
 This bundle allows creating failover [Flysystem][1] adapters and provides
 tooling to keep underlying storages synchronized.

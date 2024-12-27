@@ -14,7 +14,7 @@ use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
 
 class ProcessMessagesCommand extends Command
 {
-    protected static $defaultName = 'webf:flysystem-failover:process-messages';
+    protected static string $defaultName = 'webf:flysystem-failover:process-messages';
 
     public function __construct(
         private MessageHandlerLocator $messageHandlerLocator,
@@ -25,7 +25,7 @@ class ProcessMessagesCommand extends Command
 
     protected function execute(
         InputInterface $input,
-        OutputInterface $output
+        OutputInterface $output,
     ): int {
         /** @var string|null $limit */
         $limit = $input->getOption('limit');

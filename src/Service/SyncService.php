@@ -48,7 +48,7 @@ class SyncService
     public function sync(
         string $adapterName,
         string $extraFilesStrategy = self::EXTRA_FILES_IGNORE,
-        bool $ignoreModificationDates = false
+        bool $ignoreModificationDates = false,
     ): void {
         $extraFilesStrategies = [
             self::EXTRA_FILES_COPY,
@@ -94,7 +94,7 @@ class SyncService
             {
                 $lastModified = $file->lastModified();
 
-                $this->cache[$adapter][$file->path()] = $lastModified !== null
+                $this->cache[$adapter][$file->path()] = null !== $lastModified
                     ? $lastModified - $timeShift
                     : 0;
             }

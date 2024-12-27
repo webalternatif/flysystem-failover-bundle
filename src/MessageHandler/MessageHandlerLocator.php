@@ -41,7 +41,7 @@ class MessageHandlerLocator
      * @return callable(MessageInterface)
      */
     public function getHandlerForMessage(
-        MessageInterface $message
+        MessageInterface $message,
     ): callable {
         $handler = $this->handlers[get_class($message)];
         assert(is_callable($handler));

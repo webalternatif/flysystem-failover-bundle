@@ -23,6 +23,7 @@ use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
 
 /**
  * @template T of FilesystemAdapter
+ *
  * @template-implements CompositeFilesystemAdapter<InnerAdapter<T>>
  */
 class FailoverAdapter implements CompositeFilesystemAdapter
@@ -33,7 +34,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
     public function __construct(
         private string $name,
         private iterable $adapters,
-        private MessageRepositoryInterface $messageRepository
+        private MessageRepositoryInterface $messageRepository,
     ) {
     }
 

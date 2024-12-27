@@ -23,19 +23,19 @@ use Webf\FlysystemFailoverBundle\Serializer\Normalizer\FindResultsNormalizer;
 
 class ListMessagesCommand extends Command
 {
-    protected static $defaultName = 'webf:flysystem-failover:list-messages';
+    protected static string $defaultName = 'webf:flysystem-failover:list-messages';
 
     public function __construct(
         private FailoverAdaptersLocatorInterface $failoverAdaptersLocator,
         private MessageRepositoryInterface $messageRepository,
-        private ?SerializerInterface $serializer
+        private ?SerializerInterface $serializer,
     ) {
         parent::__construct();
     }
 
     protected function execute(
         InputInterface $input,
-        OutputInterface $output
+        OutputInterface $output,
     ): int {
         $criteria = new FindByCriteria();
 
@@ -94,7 +94,7 @@ class ListMessagesCommand extends Command
                     DeleteDirectory::class => 'Delete directory',
                     DeleteFile::class => 'Delete file',
                     ReplicateFile::class => 'Replicate file',
-                    default => throw new InvalidArgumentException('Unsupported message')
+                    default => throw new InvalidArgumentException('Unsupported message'),
                 },
                 $message->getPath(),
                 $message->getInnerSourceAdapter(),

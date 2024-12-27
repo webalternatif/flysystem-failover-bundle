@@ -1,3 +1,14 @@
+## v0.5.0 (unreleased)
+
+### 💥 Breaking changes
+
+* Drop support of PHP 8.0 and 8.1
+* Drop support of Symfony <5.4 and >=6.0 && <6.4
+
+### ✨ New features
+
+* Add support of Symfony ^7.1
+
 ## v0.4.3 (January 18, 2024)
 
 ### ✨ New features

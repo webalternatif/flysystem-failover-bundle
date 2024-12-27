@@ -88,7 +88,7 @@ class Configuration implements ConfigurationInterface
     }
 
     private function addMessageRepositoryDsnSection(
-        NodeBuilder $rootNodeChildren
+        NodeBuilder $rootNodeChildren,
     ): void {
         $rootNodeChildren
             ->scalarNode('message_repository_dsn')

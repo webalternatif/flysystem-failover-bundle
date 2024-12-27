@@ -8,7 +8,7 @@ class InnerAdapterNotFoundException extends OutOfBoundsException
 {
     public static function in(
         string $failoverAdapterName,
-        int $innerAdapterIndex
+        int $innerAdapterIndex,
     ): InnerAdapterNotFoundException {
         return new InnerAdapterNotFoundException(sprintf(
             'Unable to find adapter of index "%s" in failover adapter "%s".',

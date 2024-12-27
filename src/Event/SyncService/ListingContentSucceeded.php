@@ -9,7 +9,7 @@ class ListingContentSucceeded extends AbstractListingContentEvent
     public function __construct(
         string $failoverAdapter,
         int $innerAdapter,
-        private int $nbItems
+        private int $nbItems,
     ) {
         parent::__construct($failoverAdapter, $innerAdapter);
     }

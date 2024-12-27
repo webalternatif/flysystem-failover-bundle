@@ -18,6 +18,7 @@ use Webf\FlysystemFailoverBundle\Service\SyncService;
 
 /**
  * @internal
+ *
  * @covers \Webf\FlysystemFailoverBundle\Service\SyncService
  */
 class SyncServiceTest extends TestCase

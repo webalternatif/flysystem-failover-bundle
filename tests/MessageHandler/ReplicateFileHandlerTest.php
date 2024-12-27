@@ -19,6 +19,7 @@ use Webf\FlysystemFailoverBundle\MessageRepository\InMemoryMessageRepository;
 
 /**
  * @internal
+ *
  * @covers \Webf\FlysystemFailoverBundle\MessageHandler\ReplicateFileHandler
  */
 class ReplicateFileHandlerTest extends TestCase
