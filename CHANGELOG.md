@@ -1,19 +1,19 @@
-## v0.5.0 (unreleased)
+## v0.5.0 (December 27, 2024)
 
 ### 💥 Breaking changes
 
-* Drop support of PHP 8.0 and 8.1
-* Drop support of Symfony <5.4 and >=6.0 && <6.4
+* Drop support of PHP 8.0 and 8.1 ([#8](https://github.com/webalternatif/flysystem-failover-bundle/pull/8))
+* Drop support of Symfony <5.4 and >=6.0 && <6.4 ([#8](https://github.com/webalternatif/flysystem-failover-bundle/pull/8))
 
 ### ✨ New features
 
-* Add support of Symfony ^7.1
+* Add support of Symfony ^7.1 ([#8](https://github.com/webalternatif/flysystem-failover-bundle/pull/8))
 
 ## v0.4.3 (January 18, 2024)
 
 ### ✨ New features
 
-* Add support of PHP 8.3 ([#6](https://github.com/webalternatif/flysystem-failover-bundle/pull/5))
+* Add support of PHP 8.3 ([#6](https://github.com/webalternatif/flysystem-failover-bundle/pull/6))
 
 ### 🐛 Bug fixes
 
