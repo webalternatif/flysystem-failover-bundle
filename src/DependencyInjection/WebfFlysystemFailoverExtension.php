@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webf\FlysystemFailoverBundle\DependencyInjection;
 
+use Doctrine\ORM\Tools\ToolEvents;
 use Nyholm\Dsn\DsnParser;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
@@ -232,14 +233,20 @@ class WebfFlysystemFailoverExtension extends Extension
                         ])
                 );
 
-                $container->setDefinition(
-                    self::DOCTRINE_SCHEMA_LISTENER_SERVICE_ID,
-                    (new Definition(DoctrineSchemaListener::class))
-                        ->setArguments([
-                            new Reference(self::MESSAGE_REPOSITORY_SERVICE_ID),
-                        ])
-                        ->addTag('doctrine.event_subscriber')
-                );
+                $schemaListenerDefinition = (new Definition(DoctrineSchemaListener::class))
+                    ->setArguments([
+                        new Reference(self::MESSAGE_REPOSITORY_SERVICE_ID),
+                    ])
+                ;
+
+                if (class_exists(ToolEvents::class)) {
+                    $schemaListenerDefinition->addTag(
+                        'doctrine.event_listener',
+                        ['event' => ToolEvents::postGenerateSchema]
+                    );
+                }
+
+                $container->setDefinition(self::DOCTRINE_SCHEMA_LISTENER_SERVICE_ID, $schemaListenerDefinition);
                 break;
             case 'service':
                 // TODO check that service implements MessageRepositoryInterface
