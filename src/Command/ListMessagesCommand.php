@@ -23,7 +23,7 @@ use Webf\FlysystemFailoverBundle\Serializer\Normalizer\FindResultsNormalizer;
 
 class ListMessagesCommand extends Command
 {
-    protected static $defaultName = 'webf:flysystem-failover:list-messages';
+    protected static string $defaultName = 'webf:flysystem-failover:list-messages';
 
     public function __construct(
         private FailoverAdaptersLocatorInterface $failoverAdaptersLocator,

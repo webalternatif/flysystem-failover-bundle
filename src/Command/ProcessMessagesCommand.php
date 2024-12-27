@@ -14,7 +14,7 @@ use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
 
 class ProcessMessagesCommand extends Command
 {
-    protected static $defaultName = 'webf:flysystem-failover:process-messages';
+    protected static string $defaultName = 'webf:flysystem-failover:process-messages';
 
     public function __construct(
         private MessageHandlerLocator $messageHandlerLocator,

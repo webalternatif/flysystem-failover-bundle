@@ -24,7 +24,7 @@ use Webf\FlysystemFailoverBundle\Service\SyncService;
 
 class SyncCommand extends Command
 {
-    protected static $defaultName = 'webf:flysystem-failover:sync';
+    protected static string $defaultName = 'webf:flysystem-failover:sync';
 
     public function __construct(
         private EventDispatcherInterface $eventDispatcher,
