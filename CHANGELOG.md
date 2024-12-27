@@ -2,7 +2,7 @@
 
 ### 💥 Breaking changes
 
-* Drop support of PHP 8.0
+* Drop support of PHP 8.0 and 8.1
 * Drop support of Symfony <5.4 and >=6.0 && <6.4
 
 ### ✨ New features
