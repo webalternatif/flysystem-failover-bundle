@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Webf\FlysystemFailoverBundle\Serializer\Normalizer;
 
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
-use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Webf\FlysystemFailoverBundle\Message\DeleteDirectory;
 use Webf\FlysystemFailoverBundle\Message\DeleteFile;
@@ -13,7 +12,7 @@ use Webf\FlysystemFailoverBundle\Message\ReplicateFile;
 use Webf\FlysystemFailoverBundle\MessageRepository\FindResults;
 use Webf\FlysystemFailoverBundle\MessageRepository\MessageWithMetadata;
 
-class FindResultsNormalizer implements NormalizerInterface, CacheableSupportsMethodInterface
+class FindResultsNormalizer implements NormalizerInterface
 {
     public const SUPPORTED_FORMATS = ['csv', 'json', 'xml'];
 
@@ -35,14 +34,14 @@ class FindResultsNormalizer implements NormalizerInterface, CacheableSupportsMet
         };
     }
 
-    public function supportsNormalization($data, $format = null): bool
+    public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         return $data instanceof FindResults && in_array($format, self::SUPPORTED_FORMATS);
     }
 
-    public function hasCacheableSupportsMethod(): bool
+    public function getSupportedTypes(?string $format): array
     {
-        return true;
+        return [FindResults::class => true];
     }
 
     /**
