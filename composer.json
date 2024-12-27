@@ -27,7 +27,6 @@
         "doctrine/common": "^3.1",
         "doctrine/dbal": "^2.13",
         "doctrine/orm": "^2.9",
-        "friendsofphp/php-cs-fixer": "^3.1",
         "infection/infection": "^0.25.0",
         "league/flysystem-memory": "^3.0",
         "phpunit/phpunit": "^9.5",
@@ -46,6 +45,8 @@
         "cs-fix": "php-cs-fixer fix",
         "infection": "infection --threads=$(nproc)",
         "phpunit": "phpunit",
+        "post-install-cmd": "composer install --working-dir=tools/php-cs-fixer",
+        "post-update-cmd": "@post-install-cmd",
         "psalm": "psalm --threads=$(nproc) --no-cache",
         "test": ["@psalm", "@phpunit", "@infection", "@cs-check"]
     },
