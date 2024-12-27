@@ -14,8 +14,6 @@ use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
 
 class ProcessMessagesCommand extends Command
 {
-    protected static string $defaultName = 'webf:flysystem-failover:process-messages';
-
     public function __construct(
         private MessageHandlerLocator $messageHandlerLocator,
         private MessageRepositoryInterface $messageRepository,
@@ -69,13 +67,16 @@ class ProcessMessagesCommand extends Command
 
     protected function configure(): void
     {
+        $this
+            ->setName('webf:flysystem-failover:process-messages')
+            ->setDescription('Process messages in the repository')
+        ;
+
         $this->addOption(
             'limit',
             'l',
             InputOption::VALUE_REQUIRED,
             'Limit the number of messages to process',
         );
-
-        $this->setDescription('Process messages in the repository');
     }
 }
