@@ -36,7 +36,7 @@ class SyncCommand extends Command
 
     protected function execute(
         InputInterface $input,
-        OutputInterface $output
+        OutputInterface $output,
     ): int {
         /** @var string $adapterName */
         $adapterName = $input->hasArgument('adapter')

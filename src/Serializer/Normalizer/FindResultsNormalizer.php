@@ -62,7 +62,7 @@ class FindResultsNormalizer implements NormalizerInterface, CacheableSupportsMet
                     DeleteDirectory::class => 'delete_directory',
                     DeleteFile::class => 'delete_file',
                     ReplicateFile::class => 'replicate_file',
-                    default => throw new InvalidArgumentException('Unsupported message')
+                    default => throw new InvalidArgumentException('Unsupported message'),
                 },
                 'path' => $message->getPath(),
                 'source' => $message->getInnerSourceAdapter(),

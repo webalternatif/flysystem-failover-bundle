@@ -24,7 +24,6 @@ use Webf\FlysystemFailoverBundle\Message\ReplicateFile;
  * @psalm-type _Options=array{
  *     table_name: string
  * }
- *
  * @psalm-type _DatabaseRow=array{
  *     id: string,
  *     failover_adapter: string,
@@ -55,7 +54,7 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
      */
     public function __construct(
         private Connection $connection,
-        array $options = []
+        array $options = [],
     ) {
         $this->options = array_merge(self::DEFAULT_OPTIONS, $options);
     }
@@ -70,10 +69,9 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
         $availableAt = $message->getRetryCount() > 0
             ? $now->modify(sprintf(
                 '+%d seconds',
-                min(10 * 60, (2 ** $message->getRetryCount())) * 1000
+                min(10 * 60, 2 ** $message->getRetryCount()) * 1000
             ))
-            : $now
-        ;
+            : $now;
 
         $qb = $this->connection->createQueryBuilder()
             ->insert($this->options['table_name'])
@@ -244,7 +242,7 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
             DeleteDirectory::class => 'delete_directory',
             DeleteFile::class => 'delete_file',
             ReplicateFile::class => 'replicate_file',
-            default => throw new InvalidArgumentException('Unsupported message')
+            default => throw new InvalidArgumentException('Unsupported message'),
         };
     }
 

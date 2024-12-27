@@ -8,7 +8,7 @@ abstract class AbstractListingContentEvent
 {
     public function __construct(
         private string $failoverAdapter,
-        private int $innerAdapter
+        private int $innerAdapter,
     ) {
     }
 

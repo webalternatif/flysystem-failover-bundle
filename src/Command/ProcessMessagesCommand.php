@@ -25,7 +25,7 @@ class ProcessMessagesCommand extends Command
 
     protected function execute(
         InputInterface $input,
-        OutputInterface $output
+        OutputInterface $output,
     ): int {
         /** @var string|null $limit */
         $limit = $input->getOption('limit');

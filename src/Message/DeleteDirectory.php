@@ -10,7 +10,7 @@ class DeleteDirectory implements MessageInterface
         private string $failoverAdapter,
         private string $path,
         private int $innerAdapter,
-        private int $retryCount = 0
+        private int $retryCount = 0,
     ) {
     }
 

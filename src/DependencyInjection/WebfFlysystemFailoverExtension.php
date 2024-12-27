@@ -94,7 +94,7 @@ class WebfFlysystemFailoverExtension extends Extension
     }
 
     private function registerCommands(
-        ContainerBuilder $container
+        ContainerBuilder $container,
     ): void {
         $container->setDefinition(
             self::LIST_MESSAGES_COMMAND_SERVICE_ID,
@@ -134,7 +134,7 @@ class WebfFlysystemFailoverExtension extends Extension
      */
     private function registerFailoverAdapters(
         ContainerBuilder $container,
-        array $config
+        array $config,
     ): void {
         $references = [];
         foreach ($config['adapters'] as $name => $failoverAdapter) {
@@ -215,7 +215,7 @@ class WebfFlysystemFailoverExtension extends Extension
      */
     private function registerMessageRepository(
         ContainerBuilder $container,
-        array $config
+        array $config,
     ): void {
         $dsn = DsnParser::parse($config['message_repository_dsn']);
 

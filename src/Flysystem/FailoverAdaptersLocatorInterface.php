@@ -13,7 +13,7 @@ use Webf\FlysystemFailoverBundle\Exception\FailoverAdapterNotFoundException;
  *
  * @template-extends Traversable<string, FailoverAdapter<T>>
  */
-interface FailoverAdaptersLocatorInterface extends Traversable
+interface FailoverAdaptersLocatorInterface extends \Traversable
 {
     /**
      * @throws FailoverAdapterNotFoundException

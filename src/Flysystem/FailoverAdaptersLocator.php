@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Webf\FlysystemFailoverBundle\Flysystem;
 
-use ArrayIterator;
 use IteratorAggregate;
 use League\Flysystem\FilesystemAdapter;
 use Webf\FlysystemFailoverBundle\Exception\FailoverAdapterNotFoundException;
@@ -15,7 +14,7 @@ use Webf\FlysystemFailoverBundle\Exception\FailoverAdapterNotFoundException;
  * @template-implements FailoverAdaptersLocatorInterface<T>
  * @template-implements IteratorAggregate<string, FailoverAdapter<T>>
  */
-class FailoverAdaptersLocator implements FailoverAdaptersLocatorInterface, IteratorAggregate
+class FailoverAdaptersLocator implements FailoverAdaptersLocatorInterface, \IteratorAggregate
 {
     private bool $iterableConsumed = false;
 
@@ -56,9 +55,9 @@ class FailoverAdaptersLocator implements FailoverAdaptersLocatorInterface, Itera
     }
 
     /**
-     * @return ArrayIterator<string, FailoverAdapter<T>>
+     * @return \ArrayIterator<string, FailoverAdapter<T>>
      */
-    public function getIterator(): ArrayIterator
+    public function getIterator(): \ArrayIterator
     {
         if (!$this->iterableConsumed) {
             foreach ($this->adaptersIterable as $adapter) {
@@ -68,6 +67,6 @@ class FailoverAdaptersLocator implements FailoverAdaptersLocatorInterface, Itera
             $this->iterableConsumed = true;
         }
 
-        return new ArrayIterator($this->failoverAdapters);
+        return new \ArrayIterator($this->failoverAdapters);
     }
 }

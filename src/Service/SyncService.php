@@ -48,7 +48,7 @@ class SyncService
     public function sync(
         string $adapterName,
         string $extraFilesStrategy = self::EXTRA_FILES_IGNORE,
-        bool $ignoreModificationDates = false
+        bool $ignoreModificationDates = false,
     ): void {
         $extraFilesStrategies = [
             self::EXTRA_FILES_COPY,
