@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "php": "8.2.* || 8.3.*",
+        "php": "8.2.* || 8.3.* || 8.4.*",
         "guzzlehttp/psr7": "^2.0",
         "league/flysystem": "^3.0",
         "nyholm/dsn": "^2.0",
@@ -21,18 +21,18 @@
         "symfony/dependency-injection": "^5.4 || ^6.4 || ^7.1",
         "symfony/event-dispatcher": "^5.4 || ^6.4 || ^7.1",
         "symfony/http-kernel": "^5.4 || ^6.4 || ^7.1",
-        "webalternatif/flysystem-composite": "^0.2.0"
+        "webalternatif/flysystem-composite": "^0.3.0"
     },
     "require-dev": {
         "doctrine/common": "^3.1",
         "doctrine/dbal": "^2.13",
         "doctrine/orm": "^2.9",
-        "infection/infection": "^0.27.11",
+        "infection/infection": "^0.29.10",
         "league/flysystem-memory": "^3.0",
         "phpunit/phpunit": "^9.5",
-        "psalm/plugin-phpunit": "^0.18.4",
+        "psalm/plugin-phpunit": "^0.19.2",
         "symfony/serializer": "^5.3",
-        "vimeo/psalm": "^5.19"
+        "vimeo/psalm": "^6.5"
     },
     "conflict": {
         "doctrine/dbal": "<2.13.1"
