@@ -5,6 +5,10 @@
 * Drop support of doctrine/dbal < 4
 * Drop support of doctrine/orm < 3
 
+### 🐛 Bug fixes
+
+* Fix Doctrine DBAL exception when adding table to schema
+
 ## v0.5.1 (February 8, 2025)
 
 ### ✨ New features

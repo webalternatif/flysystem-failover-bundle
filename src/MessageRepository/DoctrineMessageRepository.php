@@ -318,10 +318,10 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
             ->setAutoincrement(true)
             ->setNotnull(true)
         ;
-        $table->addColumn('failover_adapter', Types::STRING)
+        $table->addColumn('failover_adapter', Types::STRING, ['length' => 255])
             ->setNotnull(true)
         ;
-        $table->addColumn('action', Types::STRING)
+        $table->addColumn('action', Types::STRING, ['length' => 255])
             ->setNotnull(true)
         ;
         $table->addColumn('path', Types::TEXT)
