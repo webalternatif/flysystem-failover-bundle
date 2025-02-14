@@ -131,6 +131,13 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
             ->setMaxResults($limit)
         ;
 
+        if (null !== ($adapter = $criteria->getFailoverAdapter())) {
+            $qb
+                ->andWhere('failover_adapter = :failover_adapter')
+                ->setParameter('failover_adapter', $adapter)
+            ;
+        }
+
         try {
             $result = $qb->executeQuery();
         } catch (TableNotFoundException) {

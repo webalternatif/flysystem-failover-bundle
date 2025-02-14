@@ -8,6 +8,7 @@
 ### 🐛 Bug fixes
 
 * Fix Doctrine DBAL exception when adding table to schema
+* Fix the `--adapter` option of the `webf:flysystem-failover:list-messages` command, which was not filtering anything
 
 ## v0.5.1 (February 8, 2025)
 
