@@ -1,3 +1,10 @@
+## v0.6.0 (unreleased)
+
+### 💥 Breaking changes
+
+* Drop support of doctrine/dbal < 4
+* Drop support of doctrine/orm < 3
+
 ## v0.5.1 (February 8, 2025)
 
 ### ✨ New features

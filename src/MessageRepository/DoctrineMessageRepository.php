@@ -5,13 +5,8 @@ declare(strict_types=1);
 namespace Webf\FlysystemFailoverBundle\MessageRepository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Exception\RetryableException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
-use Doctrine\DBAL\ForwardCompatibility\DriverStatement;
-use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\DBAL\Result;
-use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use Webf\FlysystemFailoverBundle\Exception\InvalidArgumentException;
@@ -101,10 +96,10 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
         ;
 
         try {
-            $this->executeStatement($qb);
+            $qb->executeStatement();
         } catch (TableNotFoundException) {
             $this->setup();
-            $this->executeStatement($qb);
+            $qb->executeStatement();
         }
     }
 
@@ -137,7 +132,7 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
         ;
 
         try {
-            $result = $this->executeQuery($qb);
+            $result = $qb->executeQuery();
         } catch (TableNotFoundException) {
             return new FindResults($limit, 0, $page, []);
         }
@@ -148,7 +143,7 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
             ->setMaxResults(null)
         ;
 
-        $countResult = $this->executeQuery($qb);
+        $countResult = $qb->executeQuery();
         $total = (int) $countResult->fetchOne();
 
         $fetchItems = function () use ($result): \Generator {
@@ -183,7 +178,7 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
         ;
 
         try {
-            $result = $this->executeQuery($qb);
+            $result = $qb->executeQuery();
         } catch (TableNotFoundException) {
             return null;
         }
@@ -228,7 +223,7 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
         ;
 
         try {
-            $result = $this->executeQuery($qb);
+            $result = $qb->executeQuery();
         } catch (TableNotFoundException) {
             return false;
         }
@@ -287,59 +282,28 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
         );
     }
 
-    /**
-     * @throws DBALException
-     */
-    private function executeQuery(QueryBuilder $qb): DriverStatement|Result
-    {
-        if (method_exists($qb, 'executeQuery')) {
-            /** @var Result $result */
-            $result = $qb->executeQuery();
-        } else {
-            /** @var DriverStatement $result */
-            $result = $qb->execute();
-        }
-
-        return $result;
-    }
-
-    /**
-     * @throws DBALException
-     */
-    private function executeStatement(QueryBuilder $qb): void
-    {
-        if (method_exists($qb, 'executeStatement')) {
-            $qb->executeStatement();
-        } else {
-            $qb->execute();
-        }
-    }
-
     private function setup(): void
     {
         $configuration = $this->connection->getConfiguration();
         $assetFilter = $configuration->getSchemaAssetsFilter();
-        $configuration->setSchemaAssetsFilter(null);
+        $configuration->setSchemaAssetsFilter(static fn () => true);
         $this->updateSchema();
         $configuration->setSchemaAssetsFilter($assetFilter);
     }
 
     private function updateSchema(): void
     {
-        $comparator = new Comparator();
-        $schemaDiff = $comparator->compare(
-            $this->connection->getSchemaManager()->createSchema(),
-            $this->getSchema()
-        );
+        $schemaManager = $this->connection->createSchemaManager();
 
-        foreach ($schemaDiff->toSaveSql($this->connection->getDatabasePlatform()) as $sql) {
-            $this->connection->executeStatement($sql);
-        }
+        $schema = new Schema(schemaConfig: $schemaManager->createSchemaConfig());
+        $this->addTableToSchema($schema);
+
+        $schemaManager->migrateSchema($this->getSchema());
     }
 
     private function getSchema(): Schema
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
         $schema = new Schema([], [], $schemaManager->createSchemaConfig());
         $this->addTableToSchema($schema);
 
