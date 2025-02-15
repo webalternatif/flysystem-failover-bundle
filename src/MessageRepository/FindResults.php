@@ -7,7 +7,7 @@ namespace Webf\FlysystemFailoverBundle\MessageRepository;
 class FindResults
 {
     /**
-     * @param iterable<MessageWithMetadata> $items
+     * @param iterable<int, MessageWithMetadata> $items
      */
     public function __construct(
         private int $limit,
@@ -33,7 +33,7 @@ class FindResults
     }
 
     /**
-     * @return iterable<MessageWithMetadata>
+     * @return iterable<int, MessageWithMetadata>
      */
     public function getItems(): iterable
     {

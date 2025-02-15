@@ -24,9 +24,8 @@
         "webalternatif/flysystem-composite": "^0.3.0"
     },
     "require-dev": {
-        "doctrine/common": "^3.1",
-        "doctrine/dbal": "^2.13",
-        "doctrine/orm": "^2.9",
+        "doctrine/dbal": "^4.2",
+        "doctrine/orm": "^3.3",
         "infection/infection": "^0.29.10",
         "league/flysystem-memory": "^3.0",
         "phpunit/phpunit": "^9.5",
@@ -35,7 +34,8 @@
         "vimeo/psalm": "^6.5"
     },
     "conflict": {
-        "doctrine/dbal": "<2.13.1"
+        "doctrine/dbal": "<4",
+        "doctrine/orm": "<3"
     },
     "suggest": {
         "symfony/serializer": "To enable --format option in console commands"
