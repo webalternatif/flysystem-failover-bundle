@@ -1,14 +1,14 @@
-## v0.6.0 (unreleased)
+## v0.6.0 (February 15, 2025)
 
 ### 💥 Breaking changes
 
-* Drop support of doctrine/dbal < 4
-* Drop support of doctrine/orm < 3
+* Drop support of doctrine/dbal < 4 ([#14](https://github.com/webalternatif/flysystem-failover-bundle/pull/14))
+* Drop support of doctrine/orm < 3 ([#14](https://github.com/webalternatif/flysystem-failover-bundle/pull/14))
 
 ### 🐛 Bug fixes
 
-* Fix Doctrine DBAL exception when adding table to schema
-* Fix the `--adapter` option of the `webf:flysystem-failover:list-messages` command, which was not filtering anything
+* Fix Doctrine DBAL exception when adding table to schema ([#14](https://github.com/webalternatif/flysystem-failover-bundle/pull/14))
+* Fix the `--adapter` option of the `webf:flysystem-failover:list-messages` command, which was not filtering anything ([#14](https://github.com/webalternatif/flysystem-failover-bundle/pull/14))
 
 ## v0.5.1 (February 8, 2025)
 
