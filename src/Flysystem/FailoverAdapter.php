@@ -26,7 +26,7 @@ use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
  *
  * @template-implements CompositeFilesystemAdapter<InnerAdapter<T>>
  */
-class FailoverAdapter implements CompositeFilesystemAdapter
+final class FailoverAdapter implements CompositeFilesystemAdapter
 {
     /**
      * @param iterable<int, InnerAdapter<T>> $adapters
@@ -38,6 +38,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
     ) {
     }
 
+    #[\Override]
     public function fileExists(string $path): bool
     {
         foreach ($this->adapters as $adapter) {
@@ -51,6 +52,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToCheckFileExistence::forLocation($path);
     }
 
+    #[\Override]
     public function directoryExists(string $path): bool
     {
         foreach ($this->adapters as $adapter) {
@@ -64,6 +66,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToCheckDirectoryExistence::forLocation($path);
     }
 
+    #[\Override]
     public function write(string $path, string $contents, Config $config): void
     {
         $writtenAdapter = null;
@@ -98,6 +101,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToWriteFile::atLocation($path);
     }
 
+    #[\Override]
     public function writeStream(string $path, $contents, Config $config): void
     {
         $writtenAdapter = null;
@@ -132,6 +136,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToWriteFile::atLocation($path);
     }
 
+    #[\Override]
     public function read(string $path): string
     {
         foreach ($this->adapters as $adapter) {
@@ -145,6 +150,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToReadFile::fromLocation($path);
     }
 
+    #[\Override]
     public function readStream(string $path)
     {
         foreach ($this->adapters as $adapter) {
@@ -158,6 +164,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToReadFile::fromLocation($path);
     }
 
+    #[\Override]
     public function delete(string $path): void
     {
         foreach ($this->adapters as $name => $adapter) {
@@ -172,6 +179,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         }
     }
 
+    #[\Override]
     public function deleteDirectory(string $path): void
     {
         foreach ($this->adapters as $name => $adapter) {
@@ -186,16 +194,19 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         }
     }
 
+    #[\Override]
     public function createDirectory(string $path, Config $config): void
     {
         throw new UnsupportedOperationException(sprintf('Method "createDirectory" is not supported with "%s".', self::class));
     }
 
+    #[\Override]
     public function setVisibility(string $path, string $visibility): void
     {
         throw new UnsupportedOperationException(sprintf('Method "setVisibility" is not supported with "%s".', self::class));
     }
 
+    #[\Override]
     public function visibility(string $path): FileAttributes
     {
         foreach ($this->adapters as $adapter) {
@@ -209,6 +220,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToRetrieveMetadata::visibility($path);
     }
 
+    #[\Override]
     public function mimeType(string $path): FileAttributes
     {
         foreach ($this->adapters as $adapter) {
@@ -222,6 +234,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToRetrieveMetadata::mimeType($path);
     }
 
+    #[\Override]
     public function lastModified(string $path): FileAttributes
     {
         foreach ($this->adapters as $adapter) {
@@ -235,6 +248,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToRetrieveMetadata::lastModified($path);
     }
 
+    #[\Override]
     public function fileSize(string $path): FileAttributes
     {
         foreach ($this->adapters as $adapter) {
@@ -248,16 +262,19 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToRetrieveMetadata::fileSize($path);
     }
 
+    #[\Override]
     public function listContents(string $path, bool $deep): iterable
     {
         throw new UnsupportedOperationException(sprintf('Method "listContents" is not supported with "%s".', self::class));
     }
 
+    #[\Override]
     public function move(string $source, string $destination, Config $config): void
     {
         throw new UnsupportedOperationException(sprintf('Method "move" is not supported with "%s".', self::class));
     }
 
+    #[\Override]
     public function copy(string $source, string $destination, Config $config): void
     {
         throw new UnsupportedOperationException(sprintf('Method "copy" is not supported with "%s".', self::class));
@@ -285,6 +302,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
     /**
      * @return iterable<int, InnerAdapter<T>>
      */
+    #[\Override]
     public function getInnerAdapters(): iterable
     {
         return $this->adapters;

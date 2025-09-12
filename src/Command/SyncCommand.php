@@ -22,7 +22,7 @@ use Webf\FlysystemFailoverBundle\Event\SyncService\SearchingFilesToReplicateStar
 use Webf\FlysystemFailoverBundle\Flysystem\FailoverAdaptersLocatorInterface;
 use Webf\FlysystemFailoverBundle\Service\SyncService;
 
-class SyncCommand extends Command
+final class SyncCommand extends Command
 {
     public function __construct(
         private EventDispatcherInterface $eventDispatcher,
@@ -32,6 +32,7 @@ class SyncCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function execute(
         InputInterface $input,
         OutputInterface $output,
@@ -219,6 +220,7 @@ class SyncCommand extends Command
         return 0;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this

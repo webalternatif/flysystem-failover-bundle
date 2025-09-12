@@ -7,7 +7,7 @@ namespace Webf\FlysystemFailoverBundle\MessageHandler;
 use Webf\FlysystemFailoverBundle\Exception\InvalidArgumentException;
 use Webf\FlysystemFailoverBundle\Message\MessageInterface;
 
-class MessageHandlerLocator
+final class MessageHandlerLocator
 {
     /**
      * @var array<class-string, callable(MessageInterface)|MessageHandlerInterface>

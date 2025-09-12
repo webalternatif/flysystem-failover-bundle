@@ -23,7 +23,7 @@ use Webf\FlysystemFailoverBundle\Message\DeleteFile;
 use Webf\FlysystemFailoverBundle\Message\ReplicateFile;
 use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
 
-class SyncService
+final class SyncService
 {
     public const EXTRA_FILES_COPY = 'copy';
     public const EXTRA_FILES_DELETE = 'delete';

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Webf\FlysystemFailoverBundle\MessageRepository;
 
-class FindResults
+final class FindResults
 {
     /**
      * @param iterable<int, MessageWithMetadata> $items

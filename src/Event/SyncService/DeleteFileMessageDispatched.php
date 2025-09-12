@@ -6,7 +6,7 @@ namespace Webf\FlysystemFailoverBundle\Event\SyncService;
 
 use Webf\FlysystemFailoverBundle\Message\MessageInterface;
 
-class DeleteFileMessageDispatched
+final class DeleteFileMessageDispatched
 {
     public function __construct(private MessageInterface $message)
     {

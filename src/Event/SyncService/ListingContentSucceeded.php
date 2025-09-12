@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Webf\FlysystemFailoverBundle\Event\SyncService;
 
-class ListingContentSucceeded extends AbstractListingContentEvent
+final class ListingContentSucceeded extends AbstractListingContentEvent
 {
     public function __construct(
         string $failoverAdapter,

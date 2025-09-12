@@ -6,7 +6,7 @@ namespace Webf\FlysystemFailoverBundle\Event\SyncService;
 
 use Webf\FlysystemFailoverBundle\Message\ReplicateFile;
 
-class ReplicateFileMessagePreDispatch
+final class ReplicateFileMessagePreDispatch
 {
     public function __construct(private ReplicateFile $message)
     {

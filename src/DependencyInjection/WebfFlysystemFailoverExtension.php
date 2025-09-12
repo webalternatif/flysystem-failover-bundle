@@ -44,7 +44,7 @@ use Webf\FlysystemFailoverBundle\Service\SyncService;
  *     message_repository_dsn: string
  * }
  */
-class WebfFlysystemFailoverExtension extends Extension
+final class WebfFlysystemFailoverExtension extends Extension
 {
     private const PREFIX = 'webf_flysystem_failover';
 
@@ -79,6 +79,7 @@ class WebfFlysystemFailoverExtension extends Extension
         self::PREFIX . '.command.process_message';
     public const SCAN_COMMAND_SERVICE_ID = self::PREFIX . '.command.scan';
 
+    #[\Override]
     public function load(array $configs, ContainerBuilder $container): void
     {
         /** @var _Config $config */

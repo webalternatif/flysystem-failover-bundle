@@ -26,7 +26,7 @@ use Webf\FlysystemFailoverBundle\MessageRepository\DoctrineMessageRepository;
  * @covers \Webf\FlysystemFailoverBundle\EventListener\DoctrineSchemaListener
  * @covers \Webf\FlysystemFailoverBundle\MessageRepository\DoctrineMessageRepository
  */
-class DoctrineSchemaListenerTest extends TestCase
+final class DoctrineSchemaListenerTest extends TestCase
 {
     public function test_schema_is_creatable_on_all_platforms(): void
     {

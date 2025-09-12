@@ -21,7 +21,7 @@ use Webf\FlysystemFailoverBundle\Service\SyncService;
  *
  * @covers \Webf\FlysystemFailoverBundle\Service\SyncService
  */
-class SyncServiceTest extends TestCase
+final class SyncServiceTest extends TestCase
 {
     public function test_missing_files_in_secondary_storages_are_replicated_from_first_storage(): void
     {

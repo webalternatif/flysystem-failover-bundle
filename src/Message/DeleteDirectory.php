@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Webf\FlysystemFailoverBundle\Message;
 
-class DeleteDirectory implements MessageInterface
+final class DeleteDirectory implements MessageInterface
 {
     public function __construct(
         private string $failoverAdapter,
@@ -14,31 +14,37 @@ class DeleteDirectory implements MessageInterface
     ) {
     }
 
+    #[\Override]
     public function getFailoverAdapter(): string
     {
         return $this->failoverAdapter;
     }
 
+    #[\Override]
     public function getPath(): string
     {
         return $this->path;
     }
 
+    #[\Override]
     public function getInnerSourceAdapter(): ?int
     {
         return null;
     }
 
+    #[\Override]
     public function getInnerDestinationAdapter(): int
     {
         return $this->innerAdapter;
     }
 
+    #[\Override]
     public function getRetryCount(): int
     {
         return $this->retryCount;
     }
 
+    #[\Override]
     public function __toString()
     {
         return sprintf(

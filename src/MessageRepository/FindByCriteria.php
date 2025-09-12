@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Webf\FlysystemFailoverBundle\MessageRepository;
 
-class FindByCriteria
+final class FindByCriteria
 {
     public const DEFAULT_LIMIT = 30;
     public const DEFAULT_PAGE = 1;

@@ -6,18 +6,20 @@ namespace Webf\FlysystemFailoverBundle\MessageRepository;
 
 use Webf\FlysystemFailoverBundle\Message\MessageInterface;
 
-class InMemoryMessageRepository implements MessageRepositoryInterface
+final class InMemoryMessageRepository implements MessageRepositoryInterface
 {
     /**
      * @var array<MessageInterface>
      */
     private array $messages = [];
 
+    #[\Override]
     public function push(MessageInterface $message): void
     {
         $this->messages[] = $message;
     }
 
+    #[\Override]
     public function pop(): ?MessageInterface
     {
         return array_shift($this->messages);
@@ -31,6 +33,7 @@ class InMemoryMessageRepository implements MessageRepositoryInterface
         return $messages;
     }
 
+    #[\Override]
     public function findBy(FindByCriteria $criteria): FindResults
     {
         $now = new \DateTimeImmutable();

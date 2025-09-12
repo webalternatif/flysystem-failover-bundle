@@ -22,7 +22,7 @@ use Webf\FlysystemFailoverBundle\MessageRepository\InMemoryMessageRepository;
  *
  * @covers \Webf\FlysystemFailoverBundle\MessageHandler\ReplicateFileHandler
  */
-class ReplicateFileHandlerTest extends TestCase
+final class ReplicateFileHandlerTest extends TestCase
 {
     public function test_source_stream_can_be_non_seekable(): void
     {

@@ -7,6 +7,8 @@ namespace Webf\FlysystemFailoverBundle\MessageRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\RetryableException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use Doctrine\DBAL\Schema\Name\UnqualifiedName;
+use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use Webf\FlysystemFailoverBundle\Exception\InvalidArgumentException;
@@ -31,7 +33,7 @@ use Webf\FlysystemFailoverBundle\Message\ReplicateFile;
  *     available_at: string,
  * }
  */
-class DoctrineMessageRepository implements MessageRepositoryInterface
+final class DoctrineMessageRepository implements MessageRepositoryInterface
 {
     private const POP_RETRY_COUNT = 10;
 
@@ -54,6 +56,7 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
         $this->options = array_merge(self::DEFAULT_OPTIONS, $options);
     }
 
+    #[\Override]
     public function push(MessageInterface $message): void
     {
         if ($this->exists($message)) {
@@ -103,6 +106,7 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
         }
     }
 
+    #[\Override]
     public function pop(): ?MessageInterface
     {
         for ($i = 0; $i < self::POP_RETRY_COUNT; ++$i) {
@@ -115,6 +119,7 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
         return null;
     }
 
+    #[\Override]
     public function findBy(FindByCriteria $criteria): FindResults
     {
         $limit = $criteria->getLimit();
@@ -350,7 +355,11 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
             ->setNotnull(true)
         ;
 
-        $table->setPrimaryKey(['id']);
+        $table->addPrimaryKeyConstraint(
+            PrimaryKeyConstraint::editor()
+                ->setColumnNames(UnqualifiedName::unquoted('id'))
+                ->create()
+        );
         $table->addIndex(['available_at']);
         $table->addIndex(['created_at']);
     }

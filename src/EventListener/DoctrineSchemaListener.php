@@ -14,7 +14,7 @@ namespace Webf\FlysystemFailoverBundle\EventListener;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 use Webf\FlysystemFailoverBundle\MessageRepository\DoctrineMessageRepository;
 
-class DoctrineSchemaListener
+final class DoctrineSchemaListener
 {
     public function __construct(private DoctrineMessageRepository $repository)
     {

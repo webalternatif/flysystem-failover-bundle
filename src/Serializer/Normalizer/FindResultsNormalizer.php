@@ -12,10 +12,11 @@ use Webf\FlysystemFailoverBundle\Message\ReplicateFile;
 use Webf\FlysystemFailoverBundle\MessageRepository\FindResults;
 use Webf\FlysystemFailoverBundle\MessageRepository\MessageWithMetadata;
 
-class FindResultsNormalizer implements NormalizerInterface
+final class FindResultsNormalizer implements NormalizerInterface
 {
     public const SUPPORTED_FORMATS = ['csv', 'json', 'xml'];
 
+    #[\Override]
     public function normalize($object, $format = null, array $context = []): array
     {
         if (!$object instanceof FindResults) {
@@ -34,6 +35,7 @@ class FindResultsNormalizer implements NormalizerInterface
         };
     }
 
+    #[\Override]
     public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         return $data instanceof FindResults && in_array($format, self::SUPPORTED_FORMATS);

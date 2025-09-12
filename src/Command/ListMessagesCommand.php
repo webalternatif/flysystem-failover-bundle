@@ -21,7 +21,7 @@ use Webf\FlysystemFailoverBundle\MessageRepository\FindByCriteria;
 use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
 use Webf\FlysystemFailoverBundle\Serializer\Normalizer\FindResultsNormalizer;
 
-class ListMessagesCommand extends Command
+final class ListMessagesCommand extends Command
 {
     public function __construct(
         private FailoverAdaptersLocatorInterface $failoverAdaptersLocator,
@@ -31,6 +31,7 @@ class ListMessagesCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function execute(
         InputInterface $input,
         OutputInterface $output,
@@ -136,6 +137,7 @@ class ListMessagesCommand extends Command
         return 0;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
