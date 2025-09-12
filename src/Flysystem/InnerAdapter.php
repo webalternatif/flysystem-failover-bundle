@@ -137,6 +137,14 @@ final class InnerAdapter implements CompositeFilesystemAdapter
         $this->adapter->copy($source, $destination, $config);
     }
 
+    /**
+     * @return T
+     */
+    public function getInnerAdapter(): FilesystemAdapter
+    {
+        return $this->adapter;
+    }
+
     #[\Override]
     public function getInnerAdapters(): iterable
     {
