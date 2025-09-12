@@ -10,10 +10,12 @@ use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\UnableToCheckDirectoryExistence;
 use League\Flysystem\UnableToCheckFileExistence;
+use League\Flysystem\UnableToGeneratePublicUrl;
 use League\Flysystem\UnableToGenerateTemporaryUrl;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToRetrieveMetadata;
 use League\Flysystem\UnableToWriteFile;
+use League\Flysystem\UrlGeneration\PublicUrlGenerator;
 use League\Flysystem\UrlGeneration\TemporaryUrlGenerator;
 use Webf\Flysystem\Composite\CompositeFilesystemAdapter;
 use Webf\FlysystemFailoverBundle\Exception\InnerAdapterNotFoundException;
@@ -28,7 +30,7 @@ use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
  *
  * @template-implements CompositeFilesystemAdapter<InnerAdapter<T>>
  */
-final class FailoverAdapter implements CompositeFilesystemAdapter, TemporaryUrlGenerator
+final class FailoverAdapter implements CompositeFilesystemAdapter, PublicUrlGenerator, TemporaryUrlGenerator
 {
     /**
      * @param iterable<int, InnerAdapter<T>> $adapters
@@ -308,6 +310,25 @@ final class FailoverAdapter implements CompositeFilesystemAdapter, TemporaryUrlG
     public function getInnerAdapters(): iterable
     {
         return $this->adapters;
+    }
+
+    #[\Override]
+    public function publicUrl(string $path, Config $config): string
+    {
+        foreach ($this->adapters as $adapter) {
+            $innerAdapter = $adapter->getInnerAdapter();
+            if (!$innerAdapter instanceof PublicUrlGenerator) {
+                continue;
+            }
+
+            try {
+                return $innerAdapter->publicUrl($path, $config);
+            } catch (UnableToGeneratePublicUrl) {
+                // TODO log exception ?
+            }
+        }
+
+        throw new UnableToGeneratePublicUrl('no inner adapter is configured or has succeeded.', $path);
     }
 
     #[\Override]

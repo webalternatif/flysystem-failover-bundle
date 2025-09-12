@@ -6,7 +6,9 @@ use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use League\Flysystem\UnableToGeneratePublicUrl;
 use League\Flysystem\UnableToGenerateTemporaryUrl;
+use League\Flysystem\UrlGeneration\PublicUrlGenerator;
 use League\Flysystem\UrlGeneration\TemporaryUrlGenerator;
 use PHPUnit\Framework\TestCase;
 use Webf\FlysystemFailoverBundle\Flysystem\FailoverAdapter;
@@ -20,6 +22,116 @@ use Webf\FlysystemFailoverBundle\MessageRepository\InMemoryMessageRepository;
  */
 final class FailoverAdapterTest extends TestCase
 {
+    public function test_public_url_forwards_parameters_to_inner_adapter(): void
+    {
+        $adapter = new class() extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
+            #[\Override]
+            public function publicUrl(string $path, Config $config): string
+            {
+                $config = $config->toArray();
+
+                return sprintf(
+                    '%s?%s',
+                    $path,
+                    join('&', array_map(fn ($k, $v) => "{$k}={$v}", array_keys($config), $config)),
+                );
+            }
+        };
+
+        $filesystem = new Filesystem(
+            new FailoverAdapter('default', $this->toInner([$adapter]), new InMemoryMessageRepository())
+        );
+
+        $this->assertEquals(
+            'file.txt?foo=bar&baz=qux',
+            $filesystem->publicUrl('file.txt', ['foo' => 'bar', 'baz' => 'qux']),
+        );
+    }
+
+    public function test_generating_public_url_returns_first_successful_public_url(): void
+    {
+        $adapter0 = new InMemoryFilesystemAdapter();
+
+        $adapter1 = new class() extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
+            #[\Override]
+            public function publicUrl(string $path, Config $config): string
+            {
+                throw new UnableToGeneratePublicUrl('this adapter fails to generate public URL.', $path);
+            }
+        };
+
+        $adapter2 = new class() extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
+            #[\Override]
+            public function publicUrl(string $path, Config $config): string
+            {
+                return 'public_url_of_adapter_1';
+            }
+        };
+
+        $adapter3 = new class() extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
+            #[\Override]
+            public function publicUrl(string $path, Config $config): string
+            {
+                return 'public_url_of_adapter_2';
+            }
+        };
+
+        $filesystem = new Filesystem(
+            new FailoverAdapter(
+                'default',
+                $this->toInner([$adapter0, $adapter1, $adapter2, $adapter3]),
+                new InMemoryMessageRepository()
+            )
+        );
+
+        $this->assertEquals(
+            'public_url_of_adapter_1',
+            $filesystem->publicUrl('file.txt')
+        );
+    }
+
+    public function test_public_url_throw_exception_when_no_inner_adapter_can_generate_public_url(): void
+    {
+        $adapter0 = new InMemoryFilesystemAdapter();
+        $adapter1 = new InMemoryFilesystemAdapter();
+        $adapter2 = new InMemoryFilesystemAdapter();
+
+        $filesystem = new Filesystem(
+            new FailoverAdapter(
+                'default',
+                $this->toInner([$adapter0, $adapter1, $adapter2]),
+                new InMemoryMessageRepository()
+            )
+        );
+
+        $this->expectException(UnableToGeneratePublicUrl::class);
+
+        $filesystem->publicUrl('file.txt');
+    }
+
+    public function test_public_url_throw_exception_when_no_inner_adapter_succeed_to_provide_public_url(): void
+    {
+        $adapter = new class() extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
+            #[\Override]
+            public function publicUrl(string $path, Config $config): string
+            {
+                throw new UnableToGeneratePublicUrl('this adapter fails to generate public URL.', $path);
+            }
+        };
+
+        $filesystem = new Filesystem(
+            new FailoverAdapter(
+                'default',
+                $this->toInner([$adapter]),
+                new InMemoryMessageRepository()
+            )
+        );
+
+        $this->expectException(UnableToGeneratePublicUrl::class);
+
+        $filesystem->publicUrl('file.txt');
+    }
+
     public function test_temporary_url_forwards_parameters_to_inner_adapter(): void
     {
         $adapter = new class() extends InMemoryFilesystemAdapter implements TemporaryUrlGenerator {
