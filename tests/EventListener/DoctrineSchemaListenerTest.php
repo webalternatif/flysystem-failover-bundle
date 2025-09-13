@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Webf\FlysystemFailoverBundle\EventListener;
 
 use Doctrine\DBAL\DriverManager;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Webf\FlysystemFailoverBundle\MessageRepository;
 
 use PHPUnit\Framework\TestCase;
