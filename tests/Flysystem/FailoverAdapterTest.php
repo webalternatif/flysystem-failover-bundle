@@ -2,12 +2,15 @@
 
 namespace Tests\Webf\FlysystemFailoverBundle\Flysystem;
 
+use League\Flysystem\ChecksumAlgoIsNotSupported;
+use League\Flysystem\ChecksumProvider;
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use League\Flysystem\UnableToGeneratePublicUrl;
 use League\Flysystem\UnableToGenerateTemporaryUrl;
+use League\Flysystem\UnableToProvideChecksum;
 use League\Flysystem\UrlGeneration\PublicUrlGenerator;
 use League\Flysystem\UrlGeneration\TemporaryUrlGenerator;
 use PHPUnit\Framework\TestCase;
@@ -22,6 +25,132 @@ use Webf\FlysystemFailoverBundle\MessageRepository\InMemoryMessageRepository;
  */
 final class FailoverAdapterTest extends TestCase
 {
+    public function test_checksum_forwards_parameters_to_inner_adapter(): void
+    {
+        $adapter = new class() extends InMemoryFilesystemAdapter implements ChecksumProvider {
+            #[\Override]
+            public function checksum(string $path, Config $config): string
+            {
+                $config = $config->toArray();
+
+                return sprintf(
+                    '%s?%s',
+                    $path,
+                    join('&', array_map(fn ($k, $v) => "{$k}={$v}", array_keys($config), $config)),
+                );
+            }
+        };
+
+        $filesystem = new Filesystem(
+            new FailoverAdapter('default', $this->toInner([$adapter]), new InMemoryMessageRepository())
+        );
+
+        $this->assertEquals(
+            'file.txt?foo=bar&baz=qux',
+            $filesystem->checksum('file.txt', ['foo' => 'bar', 'baz' => 'qux']),
+        );
+    }
+
+    public function test_providing_checksum_returns_result_of_first_successful_inner_adapter(): void
+    {
+        $adapter0 = new InMemoryFilesystemAdapter();
+
+        $adapter1 = new class() extends InMemoryFilesystemAdapter implements ChecksumProvider {
+            #[\Override]
+            public function checksum(string $path, Config $config): string
+            {
+                throw new ChecksumAlgoIsNotSupported();
+            }
+        };
+
+        $adapter2 = new class() extends InMemoryFilesystemAdapter implements ChecksumProvider {
+            #[\Override]
+            public function checksum(string $path, Config $config): string
+            {
+                throw new UnableToProvideChecksum('this adapter fails to provide checksum.', $path);
+            }
+        };
+
+        $adapter3 = new class() extends InMemoryFilesystemAdapter implements ChecksumProvider {
+            #[\Override]
+            public function checksum(string $path, Config $config): string
+            {
+                return 'checksum_of_adapter_3';
+            }
+        };
+
+        $adapter4 = new class() extends InMemoryFilesystemAdapter implements ChecksumProvider {
+            #[\Override]
+            public function checksum(string $path, Config $config): string
+            {
+                return 'checksum_of_adapter_4';
+            }
+        };
+
+        $filesystem = new Filesystem(
+            new FailoverAdapter(
+                'default',
+                $this->toInner([$adapter0, $adapter1, $adapter2, $adapter3, $adapter4]),
+                new InMemoryMessageRepository()
+            )
+        );
+
+        $this->assertEquals(
+            'checksum_of_adapter_3',
+            $filesystem->checksum('file.txt')
+        );
+    }
+
+    public function test_checksum_throw_exception_when_no_inner_adapter_can_provide_checksum(): void
+    {
+        $adapter0 = new InMemoryFilesystemAdapter();
+        $adapter1 = new InMemoryFilesystemAdapter();
+        $adapter2 = new InMemoryFilesystemAdapter();
+
+        $filesystem = new Filesystem(
+            new FailoverAdapter(
+                'default',
+                $this->toInner([$adapter0, $adapter1, $adapter2]),
+                new InMemoryMessageRepository()
+            )
+        );
+
+        $this->expectException(UnableToProvideChecksum::class);
+
+        $filesystem->checksum('file.txt');
+    }
+
+    public function test_checksum_throw_exception_when_no_inner_adapter_succeed_to_provide_checksum(): void
+    {
+        $adapter0 = new class() extends InMemoryFilesystemAdapter implements ChecksumProvider {
+            #[\Override]
+            public function checksum(string $path, Config $config): string
+            {
+                throw new ChecksumAlgoIsNotSupported();
+            }
+        };
+
+        $adapter1 = new class() extends InMemoryFilesystemAdapter implements ChecksumProvider {
+            #[\Override]
+            public function checksum(string $path, Config $config): string
+            {
+                throw new UnableToProvideChecksum('this adapter fails to provide checksum.', $path);
+            }
+        };
+
+        $filesystem = new Filesystem(
+            new FailoverAdapter(
+                'default',
+                $this->toInner([$adapter0, $adapter1]),
+                new InMemoryMessageRepository()
+            )
+        );
+
+        $this->expectException(UnableToProvideChecksum::class);
+
+        $filesystem->checksum('file.txt');
+    }
+
     public function test_public_url_forwards_parameters_to_inner_adapter(): void
     {
         $adapter = new class() extends InMemoryFilesystemAdapter implements PublicUrlGenerator {

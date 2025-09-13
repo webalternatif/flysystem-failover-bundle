@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Webf\FlysystemFailoverBundle\Flysystem;
 
+use League\Flysystem\ChecksumAlgoIsNotSupported;
+use League\Flysystem\ChecksumProvider;
 use League\Flysystem\Config;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemAdapter;
@@ -12,6 +14,7 @@ use League\Flysystem\UnableToCheckDirectoryExistence;
 use League\Flysystem\UnableToCheckFileExistence;
 use League\Flysystem\UnableToGeneratePublicUrl;
 use League\Flysystem\UnableToGenerateTemporaryUrl;
+use League\Flysystem\UnableToProvideChecksum;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToRetrieveMetadata;
 use League\Flysystem\UnableToWriteFile;
@@ -30,7 +33,7 @@ use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
  *
  * @template-implements CompositeFilesystemAdapter<InnerAdapter<T>>
  */
-final class FailoverAdapter implements CompositeFilesystemAdapter, PublicUrlGenerator, TemporaryUrlGenerator
+final class FailoverAdapter implements ChecksumProvider, CompositeFilesystemAdapter, PublicUrlGenerator, TemporaryUrlGenerator
 {
     /**
      * @param iterable<int, InnerAdapter<T>> $adapters
@@ -301,6 +304,25 @@ final class FailoverAdapter implements CompositeFilesystemAdapter, PublicUrlGene
         }
 
         throw InnerAdapterNotFoundException::in($this->name, $index);
+    }
+
+    #[\Override]
+    public function checksum(string $path, Config $config): string
+    {
+        foreach ($this->adapters as $adapter) {
+            $innerAdapter = $adapter->getInnerAdapter();
+            if (!$innerAdapter instanceof ChecksumProvider) {
+                continue;
+            }
+
+            try {
+                return $innerAdapter->checksum($path, $config);
+            } catch (ChecksumAlgoIsNotSupported|UnableToProvideChecksum) {
+                // TODO log exception ?
+            }
+        }
+
+        throw new UnableToProvideChecksum('no inner adapter is configured or has succeeded.', $path);
     }
 
     /**
