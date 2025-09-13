@@ -49,7 +49,7 @@ final class SyncCommand extends Command
 
         $io = new SymfonyStyle($input, $output);
 
-        $stats = new class() {
+        $stats = new class {
             /** @var array<int, int> */
             private array $nbReplicatedMap = [];
 
@@ -144,7 +144,7 @@ final class SyncCommand extends Command
                 $message = $event->getMessage();
 
                 $io->write(sprintf(
-                    'Dispatching message to replicate file ' .
+                    'Dispatching message to replicate file '.
                     '<comment>%s</comment> from storage %s to %s...',
                     $message->getPath(),
                     $message->getInnerSourceAdapter(),
@@ -166,7 +166,7 @@ final class SyncCommand extends Command
             DeleteFileMessagePreDispatch::class,
             function (DeleteFileMessagePreDispatch $event) use ($io, $stats) {
                 $io->write(sprintf(
-                    'Dispatching message to delete file ' .
+                    'Dispatching message to delete file '.
                     '<comment>%s</comment> from storage %s...',
                     $event->getMessage()->getPath(),
                     $event->getMessage()->getInnerDestinationAdapter(),
@@ -226,7 +226,7 @@ final class SyncCommand extends Command
         $this
             ->setName('webf:flysystem-failover:sync')
             ->setDescription(
-                'Synchronize storages to replicate all files present in the ' .
+                'Synchronize storages to replicate all files present in the '.
                 'first one to the others'
             )
         ;
@@ -239,8 +239,8 @@ final class SyncCommand extends Command
             $this->addArgument(
                 'adapter',
                 InputArgument::REQUIRED,
-                'Name of the failover adapter for which to scan the ' .
-                'underlaying storages' .
+                'Name of the failover adapter for which to scan the '.
+                'underlaying storages'.
                 sprintf(
                     ' (one of <comment>"%s"</comment>)',
                     join('"</comment>, <comment>"', $adapters)
@@ -252,7 +252,7 @@ final class SyncCommand extends Command
             'extra-files',
             mode: InputOption::VALUE_OPTIONAL,
             description: sprintf(
-                'How to handle extra files in secondary storages. One of ' .
+                'How to handle extra files in secondary storages. One of '.
                 '<comment>"%s"</comment>.',
                 join('"</comment>, <comment>"', [
                     SyncService::EXTRA_FILES_IGNORE,
@@ -266,7 +266,7 @@ final class SyncCommand extends Command
         $this->addOption(
             'ignore-modification-dates',
             mode: InputOption::VALUE_NONE,
-            description: 'Do not replicate files already present in ' .
+            description: 'Do not replicate files already present in '.
                 'secondary storages, even if the modification date is older.'
         );
     }

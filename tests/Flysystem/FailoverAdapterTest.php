@@ -27,7 +27,7 @@ final class FailoverAdapterTest extends TestCase
 {
     public function test_checksum_forwards_parameters_to_inner_adapter(): void
     {
-        $adapter = new class() extends InMemoryFilesystemAdapter implements ChecksumProvider {
+        $adapter = new class extends InMemoryFilesystemAdapter implements ChecksumProvider {
             #[\Override]
             public function checksum(string $path, Config $config): string
             {
@@ -55,7 +55,7 @@ final class FailoverAdapterTest extends TestCase
     {
         $adapter0 = new InMemoryFilesystemAdapter();
 
-        $adapter1 = new class() extends InMemoryFilesystemAdapter implements ChecksumProvider {
+        $adapter1 = new class extends InMemoryFilesystemAdapter implements ChecksumProvider {
             #[\Override]
             public function checksum(string $path, Config $config): string
             {
@@ -63,7 +63,7 @@ final class FailoverAdapterTest extends TestCase
             }
         };
 
-        $adapter2 = new class() extends InMemoryFilesystemAdapter implements ChecksumProvider {
+        $adapter2 = new class extends InMemoryFilesystemAdapter implements ChecksumProvider {
             #[\Override]
             public function checksum(string $path, Config $config): string
             {
@@ -71,7 +71,7 @@ final class FailoverAdapterTest extends TestCase
             }
         };
 
-        $adapter3 = new class() extends InMemoryFilesystemAdapter implements ChecksumProvider {
+        $adapter3 = new class extends InMemoryFilesystemAdapter implements ChecksumProvider {
             #[\Override]
             public function checksum(string $path, Config $config): string
             {
@@ -79,7 +79,7 @@ final class FailoverAdapterTest extends TestCase
             }
         };
 
-        $adapter4 = new class() extends InMemoryFilesystemAdapter implements ChecksumProvider {
+        $adapter4 = new class extends InMemoryFilesystemAdapter implements ChecksumProvider {
             #[\Override]
             public function checksum(string $path, Config $config): string
             {
@@ -122,7 +122,7 @@ final class FailoverAdapterTest extends TestCase
 
     public function test_checksum_throw_exception_when_no_inner_adapter_succeed_to_provide_checksum(): void
     {
-        $adapter0 = new class() extends InMemoryFilesystemAdapter implements ChecksumProvider {
+        $adapter0 = new class extends InMemoryFilesystemAdapter implements ChecksumProvider {
             #[\Override]
             public function checksum(string $path, Config $config): string
             {
@@ -130,7 +130,7 @@ final class FailoverAdapterTest extends TestCase
             }
         };
 
-        $adapter1 = new class() extends InMemoryFilesystemAdapter implements ChecksumProvider {
+        $adapter1 = new class extends InMemoryFilesystemAdapter implements ChecksumProvider {
             #[\Override]
             public function checksum(string $path, Config $config): string
             {
@@ -153,7 +153,7 @@ final class FailoverAdapterTest extends TestCase
 
     public function test_public_url_forwards_parameters_to_inner_adapter(): void
     {
-        $adapter = new class() extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
+        $adapter = new class extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
             #[\Override]
             public function publicUrl(string $path, Config $config): string
             {
@@ -181,7 +181,7 @@ final class FailoverAdapterTest extends TestCase
     {
         $adapter0 = new InMemoryFilesystemAdapter();
 
-        $adapter1 = new class() extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
+        $adapter1 = new class extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
             #[\Override]
             public function publicUrl(string $path, Config $config): string
             {
@@ -189,7 +189,7 @@ final class FailoverAdapterTest extends TestCase
             }
         };
 
-        $adapter2 = new class() extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
+        $adapter2 = new class extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
             #[\Override]
             public function publicUrl(string $path, Config $config): string
             {
@@ -197,7 +197,7 @@ final class FailoverAdapterTest extends TestCase
             }
         };
 
-        $adapter3 = new class() extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
+        $adapter3 = new class extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
             #[\Override]
             public function publicUrl(string $path, Config $config): string
             {
@@ -240,7 +240,7 @@ final class FailoverAdapterTest extends TestCase
 
     public function test_public_url_throw_exception_when_no_inner_adapter_succeed_to_provide_public_url(): void
     {
-        $adapter = new class() extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
+        $adapter = new class extends InMemoryFilesystemAdapter implements PublicUrlGenerator {
             #[\Override]
             public function publicUrl(string $path, Config $config): string
             {
@@ -263,7 +263,7 @@ final class FailoverAdapterTest extends TestCase
 
     public function test_temporary_url_forwards_parameters_to_inner_adapter(): void
     {
-        $adapter = new class() extends InMemoryFilesystemAdapter implements TemporaryUrlGenerator {
+        $adapter = new class extends InMemoryFilesystemAdapter implements TemporaryUrlGenerator {
             #[\Override]
             public function temporaryUrl(string $path, \DateTimeInterface $expiresAt, Config $config): string
             {
@@ -293,7 +293,7 @@ final class FailoverAdapterTest extends TestCase
     {
         $adapter0 = new InMemoryFilesystemAdapter();
 
-        $adapter1 = new class() extends InMemoryFilesystemAdapter implements TemporaryUrlGenerator {
+        $adapter1 = new class extends InMemoryFilesystemAdapter implements TemporaryUrlGenerator {
             #[\Override]
             public function temporaryUrl(string $path, \DateTimeInterface $expiresAt, Config $config): string
             {
@@ -301,7 +301,7 @@ final class FailoverAdapterTest extends TestCase
             }
         };
 
-        $adapter2 = new class() extends InMemoryFilesystemAdapter implements TemporaryUrlGenerator {
+        $adapter2 = new class extends InMemoryFilesystemAdapter implements TemporaryUrlGenerator {
             #[\Override]
             public function temporaryUrl(string $path, \DateTimeInterface $expiresAt, Config $config): string
             {
@@ -309,7 +309,7 @@ final class FailoverAdapterTest extends TestCase
             }
         };
 
-        $adapter3 = new class() extends InMemoryFilesystemAdapter implements TemporaryUrlGenerator {
+        $adapter3 = new class extends InMemoryFilesystemAdapter implements TemporaryUrlGenerator {
             #[\Override]
             public function temporaryUrl(string $path, \DateTimeInterface $expiresAt, Config $config): string
             {
@@ -352,7 +352,7 @@ final class FailoverAdapterTest extends TestCase
 
     public function test_temporary_url_throw_exception_when_no_inner_adapter_succeed_to_provide_temporary_url(): void
     {
-        $adapter = new class() extends InMemoryFilesystemAdapter implements TemporaryUrlGenerator {
+        $adapter = new class extends InMemoryFilesystemAdapter implements TemporaryUrlGenerator {
             #[\Override]
             public function temporaryUrl(string $path, \DateTimeInterface $expiresAt, Config $config): string
             {

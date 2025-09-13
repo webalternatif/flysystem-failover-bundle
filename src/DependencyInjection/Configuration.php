@@ -80,8 +80,8 @@ final class Configuration implements ConfigurationInterface
 
             ->integerNode('time_shift')
             ->info(
-                'Time shift in seconds of the inner adapter compared to ' .
-                'others (e.g. if the underlying storage use a different ' .
+                'Time shift in seconds of the inner adapter compared to '.
+                'others (e.g. if the underlying storage use a different '.
                 'timezone or if has an incorrect server time).'
             )
             ->end()

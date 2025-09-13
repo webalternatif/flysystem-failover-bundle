@@ -154,7 +154,7 @@ final class ListMessagesCommand extends Command
                 'adapter',
                 'a',
                 InputOption::VALUE_REQUIRED,
-                'Name of the failover adapter for which to list messages ' .
+                'Name of the failover adapter for which to list messages '.
                 sprintf(
                     ' (one of <comment>"%s"</comment>)',
                     join('"</comment>, <comment>"', $adapters)
