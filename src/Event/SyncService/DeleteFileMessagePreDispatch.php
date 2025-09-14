@@ -6,7 +6,7 @@ namespace Webf\FlysystemFailoverBundle\Event\SyncService;
 
 use Webf\FlysystemFailoverBundle\Message\DeleteFile;
 
-class DeleteFileMessagePreDispatch
+final class DeleteFileMessagePreDispatch
 {
     public function __construct(private DeleteFile $message)
     {

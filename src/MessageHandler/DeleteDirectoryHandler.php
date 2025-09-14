@@ -9,7 +9,7 @@ use Webf\FlysystemFailoverBundle\Flysystem\FailoverAdaptersLocatorInterface;
 use Webf\FlysystemFailoverBundle\Message\DeleteDirectory;
 use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
 
-class DeleteDirectoryHandler implements MessageHandlerInterface
+final class DeleteDirectoryHandler implements MessageHandlerInterface
 {
     public function __construct(
         private FailoverAdaptersLocatorInterface $adaptersLocator,

@@ -12,7 +12,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Webf\FlysystemFailoverBundle\MessageHandler\MessageHandlerLocator;
 use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
 
-class ProcessMessagesCommand extends Command
+final class ProcessMessagesCommand extends Command
 {
     public function __construct(
         private MessageHandlerLocator $messageHandlerLocator,
@@ -21,6 +21,7 @@ class ProcessMessagesCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function execute(
         InputInterface $input,
         OutputInterface $output,
@@ -65,6 +66,7 @@ class ProcessMessagesCommand extends Command
         $io->success('Message successfully processed');
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this

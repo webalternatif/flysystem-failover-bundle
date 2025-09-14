@@ -6,6 +6,6 @@ namespace Webf\FlysystemFailoverBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class WebfFlysystemFailoverBundle extends Bundle
+final class WebfFlysystemFailoverBundle extends Bundle
 {
 }

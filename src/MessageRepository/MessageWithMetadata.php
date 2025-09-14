@@ -6,7 +6,7 @@ namespace Webf\FlysystemFailoverBundle\MessageRepository;
 
 use Webf\FlysystemFailoverBundle\Message\MessageInterface;
 
-class MessageWithMetadata
+final class MessageWithMetadata
 {
     public function __construct(
         private MessageInterface $message,

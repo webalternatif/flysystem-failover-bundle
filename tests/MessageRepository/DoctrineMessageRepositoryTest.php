@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Webf\FlysystemFailoverBundle\MessageRepository;
 
 use Doctrine\DBAL\DriverManager;
@@ -16,7 +18,7 @@ use Webf\FlysystemFailoverBundle\MessageRepository\MessageWithMetadata;
  *
  * @covers \Webf\FlysystemFailoverBundle\MessageRepository\DoctrineMessageRepository
  */
-class DoctrineMessageRepositoryTest extends TestCase
+final class DoctrineMessageRepositoryTest extends TestCase
 {
     public function test_push_then_pop(): void
     {

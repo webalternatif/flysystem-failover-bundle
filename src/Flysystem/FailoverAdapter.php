@@ -4,15 +4,22 @@ declare(strict_types=1);
 
 namespace Webf\FlysystemFailoverBundle\Flysystem;
 
+use League\Flysystem\ChecksumAlgoIsNotSupported;
+use League\Flysystem\ChecksumProvider;
 use League\Flysystem\Config;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\UnableToCheckDirectoryExistence;
 use League\Flysystem\UnableToCheckFileExistence;
+use League\Flysystem\UnableToGeneratePublicUrl;
+use League\Flysystem\UnableToGenerateTemporaryUrl;
+use League\Flysystem\UnableToProvideChecksum;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToRetrieveMetadata;
 use League\Flysystem\UnableToWriteFile;
+use League\Flysystem\UrlGeneration\PublicUrlGenerator;
+use League\Flysystem\UrlGeneration\TemporaryUrlGenerator;
 use Webf\Flysystem\Composite\CompositeFilesystemAdapter;
 use Webf\FlysystemFailoverBundle\Exception\InnerAdapterNotFoundException;
 use Webf\FlysystemFailoverBundle\Exception\UnsupportedOperationException;
@@ -26,7 +33,7 @@ use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
  *
  * @template-implements CompositeFilesystemAdapter<InnerAdapter<T>>
  */
-class FailoverAdapter implements CompositeFilesystemAdapter
+final class FailoverAdapter implements ChecksumProvider, CompositeFilesystemAdapter, PublicUrlGenerator, TemporaryUrlGenerator
 {
     /**
      * @param iterable<int, InnerAdapter<T>> $adapters
@@ -38,6 +45,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
     ) {
     }
 
+    #[\Override]
     public function fileExists(string $path): bool
     {
         foreach ($this->adapters as $adapter) {
@@ -51,6 +59,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToCheckFileExistence::forLocation($path);
     }
 
+    #[\Override]
     public function directoryExists(string $path): bool
     {
         foreach ($this->adapters as $adapter) {
@@ -64,6 +73,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToCheckDirectoryExistence::forLocation($path);
     }
 
+    #[\Override]
     public function write(string $path, string $contents, Config $config): void
     {
         $writtenAdapter = null;
@@ -98,6 +108,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToWriteFile::atLocation($path);
     }
 
+    #[\Override]
     public function writeStream(string $path, $contents, Config $config): void
     {
         $writtenAdapter = null;
@@ -132,6 +143,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToWriteFile::atLocation($path);
     }
 
+    #[\Override]
     public function read(string $path): string
     {
         foreach ($this->adapters as $adapter) {
@@ -145,6 +157,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToReadFile::fromLocation($path);
     }
 
+    #[\Override]
     public function readStream(string $path)
     {
         foreach ($this->adapters as $adapter) {
@@ -158,6 +171,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToReadFile::fromLocation($path);
     }
 
+    #[\Override]
     public function delete(string $path): void
     {
         foreach ($this->adapters as $name => $adapter) {
@@ -172,6 +186,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         }
     }
 
+    #[\Override]
     public function deleteDirectory(string $path): void
     {
         foreach ($this->adapters as $name => $adapter) {
@@ -186,16 +201,19 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         }
     }
 
+    #[\Override]
     public function createDirectory(string $path, Config $config): void
     {
         throw new UnsupportedOperationException(sprintf('Method "createDirectory" is not supported with "%s".', self::class));
     }
 
+    #[\Override]
     public function setVisibility(string $path, string $visibility): void
     {
         throw new UnsupportedOperationException(sprintf('Method "setVisibility" is not supported with "%s".', self::class));
     }
 
+    #[\Override]
     public function visibility(string $path): FileAttributes
     {
         foreach ($this->adapters as $adapter) {
@@ -209,6 +227,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToRetrieveMetadata::visibility($path);
     }
 
+    #[\Override]
     public function mimeType(string $path): FileAttributes
     {
         foreach ($this->adapters as $adapter) {
@@ -222,6 +241,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToRetrieveMetadata::mimeType($path);
     }
 
+    #[\Override]
     public function lastModified(string $path): FileAttributes
     {
         foreach ($this->adapters as $adapter) {
@@ -235,6 +255,7 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToRetrieveMetadata::lastModified($path);
     }
 
+    #[\Override]
     public function fileSize(string $path): FileAttributes
     {
         foreach ($this->adapters as $adapter) {
@@ -248,16 +269,19 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw UnableToRetrieveMetadata::fileSize($path);
     }
 
+    #[\Override]
     public function listContents(string $path, bool $deep): iterable
     {
         throw new UnsupportedOperationException(sprintf('Method "listContents" is not supported with "%s".', self::class));
     }
 
+    #[\Override]
     public function move(string $source, string $destination, Config $config): void
     {
         throw new UnsupportedOperationException(sprintf('Method "move" is not supported with "%s".', self::class));
     }
 
+    #[\Override]
     public function copy(string $source, string $destination, Config $config): void
     {
         throw new UnsupportedOperationException(sprintf('Method "copy" is not supported with "%s".', self::class));
@@ -282,11 +306,69 @@ class FailoverAdapter implements CompositeFilesystemAdapter
         throw InnerAdapterNotFoundException::in($this->name, $index);
     }
 
+    #[\Override]
+    public function checksum(string $path, Config $config): string
+    {
+        foreach ($this->adapters as $adapter) {
+            $innerAdapter = $adapter->getInnerAdapter();
+            if (!$innerAdapter instanceof ChecksumProvider) {
+                continue;
+            }
+
+            try {
+                return $innerAdapter->checksum($path, $config);
+            } catch (ChecksumAlgoIsNotSupported|UnableToProvideChecksum) {
+                // TODO log exception ?
+            }
+        }
+
+        throw new UnableToProvideChecksum('no inner adapter is configured or has succeeded.', $path);
+    }
+
     /**
      * @return iterable<int, InnerAdapter<T>>
      */
+    #[\Override]
     public function getInnerAdapters(): iterable
     {
         return $this->adapters;
+    }
+
+    #[\Override]
+    public function publicUrl(string $path, Config $config): string
+    {
+        foreach ($this->adapters as $adapter) {
+            $innerAdapter = $adapter->getInnerAdapter();
+            if (!$innerAdapter instanceof PublicUrlGenerator) {
+                continue;
+            }
+
+            try {
+                return $innerAdapter->publicUrl($path, $config);
+            } catch (UnableToGeneratePublicUrl) {
+                // TODO log exception ?
+            }
+        }
+
+        throw new UnableToGeneratePublicUrl('no inner adapter is configured or has succeeded.', $path);
+    }
+
+    #[\Override]
+    public function temporaryUrl(string $path, \DateTimeInterface $expiresAt, Config $config): string
+    {
+        foreach ($this->adapters as $adapter) {
+            $innerAdapter = $adapter->getInnerAdapter();
+            if (!$innerAdapter instanceof TemporaryUrlGenerator) {
+                continue;
+            }
+
+            try {
+                return $innerAdapter->temporaryUrl($path, $expiresAt, $config);
+            } catch (UnableToGenerateTemporaryUrl) {
+                // TODO log exception ?
+            }
+        }
+
+        throw new UnableToGenerateTemporaryUrl('no inner adapter is configured or has succeeded.', $path);
     }
 }

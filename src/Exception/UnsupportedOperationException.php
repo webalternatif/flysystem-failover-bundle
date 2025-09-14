@@ -6,6 +6,6 @@ namespace Webf\FlysystemFailoverBundle\Exception;
 
 use League\Flysystem\FilesystemException;
 
-class UnsupportedOperationException extends LogicException implements FilesystemException
+final class UnsupportedOperationException extends LogicException implements FilesystemException
 {
 }

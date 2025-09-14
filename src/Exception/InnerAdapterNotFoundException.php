@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Webf\FlysystemFailoverBundle\Exception;
 
-class InnerAdapterNotFoundException extends OutOfBoundsException
+final class InnerAdapterNotFoundException extends OutOfBoundsException
 {
     public static function in(
         string $failoverAdapterName,

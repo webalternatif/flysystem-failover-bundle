@@ -44,41 +44,42 @@ use Webf\FlysystemFailoverBundle\Service\SyncService;
  *     message_repository_dsn: string
  * }
  */
-class WebfFlysystemFailoverExtension extends Extension
+final class WebfFlysystemFailoverExtension extends Extension
 {
     private const PREFIX = 'webf_flysystem_failover';
 
-    public const FAILOVER_ADAPTER_SERVICE_ID_PREFIX = self::PREFIX . '.adapter';
+    public const FAILOVER_ADAPTER_SERVICE_ID_PREFIX = self::PREFIX.'.adapter';
     public const FAILOVER_ADAPTERS_LOCATOR_SERVICE_ID =
-        self::PREFIX . '.adapters_locator';
+        self::PREFIX.'.adapters_locator';
 
     public const MESSAGE_REPOSITORY_SERVICE_ID =
-        self::PREFIX . '.message_repository';
+        self::PREFIX.'.message_repository';
 
     public const MESSAGE_HANDLER_LOCATOR_SERVICE_ID =
-        self::PREFIX . '.message_handler_locator';
+        self::PREFIX.'.message_handler_locator';
     public const DELETE_DIRECTORY_MESSAGE_HANDLER_SERVICE_ID =
-        self::PREFIX . '.message_handler.delete_directory';
+        self::PREFIX.'.message_handler.delete_directory';
     public const DELETE_FILE_MESSAGE_HANDLER_SERVICE_ID =
-        self::PREFIX . '.message_handler.delete_file';
+        self::PREFIX.'.message_handler.delete_file';
     public const REPLICATE_FILE_MESSAGE_HANDLER_SERVICE_ID =
-        self::PREFIX . '.message_handler.replicate_file';
-    public const MESSAGE_HANDLER_TAG_NAME = self::PREFIX . '.message_handler';
+        self::PREFIX.'.message_handler.replicate_file';
+    public const MESSAGE_HANDLER_TAG_NAME = self::PREFIX.'.message_handler';
 
     public const FIND_RESULTS_NORMALIZER_SERVICE_ID =
-        self::PREFIX . '.normalizer.find_results';
+        self::PREFIX.'.normalizer.find_results';
 
-    public const SYNC_SERVICE_ID = self::PREFIX . '.service.sync';
+    public const SYNC_SERVICE_ID = self::PREFIX.'.service.sync';
 
     public const DOCTRINE_SCHEMA_LISTENER_SERVICE_ID =
-        self::PREFIX . '.listener.doctrine_schema';
+        self::PREFIX.'.listener.doctrine_schema';
 
     public const LIST_MESSAGES_COMMAND_SERVICE_ID =
-        self::PREFIX . '.command.list_messages';
+        self::PREFIX.'.command.list_messages';
     public const PROCESS_MESSAGE_COMMAND_SERVICE_ID =
-        self::PREFIX . '.command.process_message';
-    public const SCAN_COMMAND_SERVICE_ID = self::PREFIX . '.command.scan';
+        self::PREFIX.'.command.process_message';
+    public const SCAN_COMMAND_SERVICE_ID = self::PREFIX.'.command.scan';
 
+    #[\Override]
     public function load(array $configs, ContainerBuilder $container): void
     {
         /** @var _Config $config */
@@ -139,7 +140,7 @@ class WebfFlysystemFailoverExtension extends Extension
     ): void {
         $references = [];
         foreach ($config['adapters'] as $name => $failoverAdapter) {
-            $serviceId = self::FAILOVER_ADAPTER_SERVICE_ID_PREFIX . '.' . $name;
+            $serviceId = self::FAILOVER_ADAPTER_SERVICE_ID_PREFIX.'.'.$name;
 
             $container->setDefinition(
                 $serviceId,

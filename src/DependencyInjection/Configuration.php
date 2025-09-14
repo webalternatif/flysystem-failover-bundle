@@ -9,8 +9,9 @@ use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-class Configuration implements ConfigurationInterface
+final class Configuration implements ConfigurationInterface
 {
+    #[\Override]
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('webf_flysystem_failover');
@@ -79,8 +80,8 @@ class Configuration implements ConfigurationInterface
 
             ->integerNode('time_shift')
             ->info(
-                'Time shift in seconds of the inner adapter compared to ' .
-                'others (e.g. if the underlying storage use a different ' .
+                'Time shift in seconds of the inner adapter compared to '.
+                'others (e.g. if the underlying storage use a different '.
                 'timezone or if has an incorrect server time).'
             )
             ->end()

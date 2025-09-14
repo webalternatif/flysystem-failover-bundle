@@ -14,7 +14,7 @@ use Webf\FlysystemFailoverBundle\Flysystem\FailoverAdaptersLocatorInterface;
 use Webf\FlysystemFailoverBundle\Message\ReplicateFile;
 use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
 
-class ReplicateFileHandler implements MessageHandlerInterface
+final class ReplicateFileHandler implements MessageHandlerInterface
 {
     /**
      * @template T of FilesystemAdapter

@@ -14,7 +14,7 @@ use Webf\FlysystemFailoverBundle\Exception\FailoverAdapterNotFoundException;
  * @template-implements FailoverAdaptersLocatorInterface<T>
  * @template-implements IteratorAggregate<string, FailoverAdapter<T>>
  */
-class FailoverAdaptersLocator implements FailoverAdaptersLocatorInterface, \IteratorAggregate
+final class FailoverAdaptersLocator implements FailoverAdaptersLocatorInterface, \IteratorAggregate
 {
     private bool $iterableConsumed = false;
 
@@ -33,6 +33,7 @@ class FailoverAdaptersLocator implements FailoverAdaptersLocatorInterface, \Iter
     /**
      * @return FailoverAdapter<T>
      */
+    #[\Override]
     public function get(string $name): FailoverAdapter
     {
         if (key_exists($name, $this->failoverAdapters)) {
@@ -57,6 +58,7 @@ class FailoverAdaptersLocator implements FailoverAdaptersLocatorInterface, \Iter
     /**
      * @return \ArrayIterator<string, FailoverAdapter<T>>
      */
+    #[\Override]
     public function getIterator(): \ArrayIterator
     {
         if (!$this->iterableConsumed) {
