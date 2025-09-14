@@ -4,6 +4,10 @@
 
 * Make classes final
 
+### ✨ New features
+
+* Implement `ChecksumProvider`, `PublicUrlGenerator` and `TemporaryUrlGenerator`
+
 ## v0.6.0 (February 15, 2025)
 
 ### 💥 Breaking changes
