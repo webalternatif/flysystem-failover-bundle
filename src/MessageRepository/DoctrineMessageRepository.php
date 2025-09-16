@@ -302,19 +302,10 @@ class DoctrineMessageRepository implements MessageRepositoryInterface
     {
         $schemaManager = $this->connection->createSchemaManager();
 
-        $schema = new Schema(schemaConfig: $schemaManager->createSchemaConfig());
+        $schema = $schemaManager->introspectSchema();
         $this->addTableToSchema($schema);
 
-        $schemaManager->migrateSchema($this->getSchema());
-    }
-
-    private function getSchema(): Schema
-    {
-        $schemaManager = $this->connection->createSchemaManager();
-        $schema = new Schema([], [], $schemaManager->createSchemaConfig());
-        $this->addTableToSchema($schema);
-
-        return $schema;
+        $schemaManager->migrateSchema($schema);
     }
 
     private function addTableToSchema(Schema $schema): void
