@@ -1,8 +1,8 @@
-## v0.6.1 (unreleased)
+## v0.6.1 (September 16, 2025)
 
 ### 🐛 Bug fixes
 
-* Fix dropping the rest of the database when creating the message table
+* Fix dropping the rest of the database when creating the message table ([#17](https://github.com/webalternatif/flysystem-failover-bundle/pull/17))
 
 ## v0.6.0 (February 15, 2025)
 
