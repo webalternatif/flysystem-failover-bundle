@@ -16,6 +16,12 @@
         </ignoreFiles>
     </projectFiles>
 
+    <issueHandlers>
+        <ClassMustBeFinal errorLevel="suppress" />
+        <DeprecatedMethod errorLevel="suppress" />
+        <MissingOverrideAttribute errorLevel="suppress" />
+    </issueHandlers>
+
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin" />
     </plugins>
