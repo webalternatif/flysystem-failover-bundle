@@ -58,6 +58,18 @@ final class DoctrineMessageRepositoryTest extends TestCase
         $this->assertNull($repository->pop());
     }
 
+    public function test_push_creates_table_without_altering_the_rest_of_the_database(): void
+    {
+        $connection = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
+        $connection->executeStatement('CREATE TABLE other_table (id INTEGER PRIMARY KEY AUTOINCREMENT)');
+        $connection->executeStatement('INSERT INTO other_table (id) VALUES (1)');
+        $repository = new DoctrineMessageRepository($connection, ['table_name' => 'adapter_messages']);
+
+        $this->assertEquals([['id' => 1]], $connection->executeQuery('SELECT * FROM other_table')->fetchAllAssociative());
+        $repository->push(new ReplicateFile('adapter', 'path1', 0, 1));
+        $this->assertEquals([['id' => 1]], $connection->executeQuery('SELECT * FROM other_table')->fetchAllAssociative());
+    }
+
     public function test_push_does_not_create_or_update_table_if_it_already_exists(): void
     {
         $connection = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
