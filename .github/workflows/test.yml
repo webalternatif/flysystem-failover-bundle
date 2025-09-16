@@ -1,10 +1,8 @@
 name: test
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  push: ~
+  pull_request: ~
 
 jobs:
   psalm:
@@ -30,7 +28,7 @@ jobs:
 
       - name: Cache Composer packages
         id: composer-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ~/.composer/cache
@@ -67,7 +65,7 @@ jobs:
 
       - name: Cache Composer packages
         id: composer-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ~/.composer/cache
@@ -107,7 +105,7 @@ jobs:
 
       - name: Cache Composer packages
         id: composer-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ~/.composer/cache

@@ -1,3 +1,9 @@
+## v0.6.1 (unreleased)
+
+### 🐛 Bug fixes
+
+* Fix dropping the rest of the database when creating the message table
+
 ## v0.6.0 (February 15, 2025)
 
 ### 💥 Breaking changes
