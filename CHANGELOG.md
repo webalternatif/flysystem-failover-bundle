@@ -1,12 +1,12 @@
-## v0.7.0 (unreleased)
+## v0.7.0 (September 17, 2025)
 
 ### 💥 Breaking changes
 
-* Make classes final
+* Make classes final ([#16](https://github.com/webalternatif/flysystem-failover-bundle/pull/16))
 
 ### ✨ New features
 
-* Implement `ChecksumProvider`, `PublicUrlGenerator` and `TemporaryUrlGenerator`
+* Implement `ChecksumProvider`, `PublicUrlGenerator` and `TemporaryUrlGenerator` ([#16](https://github.com/webalternatif/flysystem-failover-bundle/pull/16))
 
 ## v0.6.1 (September 16, 2025)
 
