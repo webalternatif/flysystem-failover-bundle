@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.19.1@e2ca44251c1f1aa2e35452d426895746b47de64e">
+  <file src="src/MessageRepository/DoctrineMessageRepository.php">
+    <DeprecatedMethod>
+      <code><![CDATA[addColumn]]></code>
+      <code><![CDATA[addColumn]]></code>
+      <code><![CDATA[addColumn]]></code>
+      <code><![CDATA[addColumn]]></code>
+      <code><![CDATA[addColumn]]></code>
+      <code><![CDATA[addColumn]]></code>
+      <code><![CDATA[addColumn]]></code>
+      <code><![CDATA[addColumn]]></code>
+      <code><![CDATA[addColumn]]></code>
+      <code><![CDATA[addIndex]]></code>
+      <code><![CDATA[addIndex]]></code>
+      <code><![CDATA[addPrimaryKeyConstraint]]></code>
+      <code><![CDATA[createTable]]></code>
+      <code><![CDATA[setAutoincrement]]></code>
+      <code><![CDATA[setNotnull]]></code>
+      <code><![CDATA[setNotnull]]></code>
+      <code><![CDATA[setNotnull]]></code>
+      <code><![CDATA[setNotnull]]></code>
+      <code><![CDATA[setNotnull]]></code>
+      <code><![CDATA[setNotnull]]></code>
+      <code><![CDATA[setNotnull]]></code>
+      <code><![CDATA[setNotnull]]></code>
+      <code><![CDATA[setNotnull]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="tests/EventListener/DoctrineSchemaListenerTest.php">
+    <InternalMethod>
+      <code><![CDATA[new Schema()]]></code>
+    </InternalMethod>
+  </file>
+</files>
