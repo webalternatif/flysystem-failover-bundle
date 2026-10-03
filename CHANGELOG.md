@@ -1,3 +1,13 @@
+## v0.8.0 (unreleased)
+
+### 💥 Breaking changes
+
+* Drop support of Symfony >=7.1 && <7.4 ([#20](https://github.com/webalternatif/flysystem-failover-bundle/pull/20))
+
+### ✨ New features
+
+* Add support of Symfony ^8.1 ([#20](https://github.com/webalternatif/flysystem-failover-bundle/pull/20))
+
 ## v0.7.1 (October 2, 2026)
 
 ### ✨ New features

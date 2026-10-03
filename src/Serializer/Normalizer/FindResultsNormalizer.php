@@ -17,19 +17,19 @@ final class FindResultsNormalizer implements NormalizerInterface
     public const SUPPORTED_FORMATS = ['csv', 'json', 'xml'];
 
     #[\Override]
-    public function normalize($object, $format = null, array $context = []): array
+    public function normalize($data, $format = null, array $context = []): array
     {
-        if (!$object instanceof FindResults) {
+        if (!$data instanceof FindResults) {
             throw new InvalidArgumentException(sprintf('The object must be an instance of "%s".', FindResults::class));
         }
 
         return match ($format) {
-            'csv' => $this->formatItems($object->getItems()),
+            'csv' => $this->formatItems($data->getItems()),
             'json', 'xml' => [
-                'limit' => $object->getLimit(),
-                'total' => $object->getTotal(),
-                'page' => $object->getPage(),
-                'items' => $this->formatItems($object->getItems()),
+                'limit' => $data->getLimit(),
+                'total' => $data->getTotal(),
+                'page' => $data->getPage(),
+                'items' => $this->formatItems($data->getItems()),
             ],
             default => throw new InvalidArgumentException(sprintf('The format must be one of "%s".', join('", "', self::SUPPORTED_FORMATS))),
         };
@@ -41,6 +41,7 @@ final class FindResultsNormalizer implements NormalizerInterface
         return $data instanceof FindResults && in_array($format, self::SUPPORTED_FORMATS);
     }
 
+    #[\Override]
     public function getSupportedTypes(?string $format): array
     {
         return [FindResults::class => true];
