@@ -22,6 +22,7 @@ use Webf\FlysystemFailoverBundle\EventListener\DoctrineSchemaListener;
 use Webf\FlysystemFailoverBundle\Flysystem\FailoverAdapter;
 use Webf\FlysystemFailoverBundle\Flysystem\FailoverAdaptersLocator;
 use Webf\FlysystemFailoverBundle\Flysystem\InnerAdapter;
+use Webf\FlysystemFailoverBundle\Flysystem\ListContentsStrategy;
 use Webf\FlysystemFailoverBundle\MessageHandler\DeleteDirectoryHandler;
 use Webf\FlysystemFailoverBundle\MessageHandler\DeleteFileHandler;
 use Webf\FlysystemFailoverBundle\MessageHandler\MessageHandlerLocator;
@@ -38,7 +39,8 @@ use Webf\FlysystemFailoverBundle\Service\SyncService;
  *             adapters: list<array{
  *                 service_id: string,
  *                 time_shift?: int
- *             }>
+ *             }>,
+ *             list_contents_strategy: value-of<ListContentsStrategy>
  *         }
  *     >,
  *     message_repository_dsn: string
@@ -156,6 +158,11 @@ final class WebfFlysystemFailoverExtension extends Extension
                             $failoverAdapter['adapters']
                         ),
                         new Reference(self::MESSAGE_REPOSITORY_SERVICE_ID),
+                        [
+                            'list_contents_strategy' => (new Definition(ListContentsStrategy::class))
+                                ->setFactory([ListContentsStrategy::class, 'from'])
+                                ->setArguments([$failoverAdapter['list_contents_strategy']]),
+                        ],
                     ])
             );
 
