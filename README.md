@@ -25,6 +25,8 @@ When you use a failover adapter, it will forward method calls to inner adapters.
   * For reading, it will use the first that works.
   * For writing, it will use the first that works and will push messages into a
     repository to keep underlying storages of all adapters synchronized.
+  * For listing contents, it depends on the configured strategy (see
+    [Listing contents](#listing-contents) section).
 
 Messages in the repository can then be asynchronously processed by a console
 command call (see [Processing messages](#processing-messages) section).
@@ -83,6 +85,11 @@ attributes:
   * `time_shift`: a time shift for when the synchronization command compares
     modification dates between inner adapters.
 
+A failover adapter also accepts the following options:
+
+  * `list_contents_strategy`: how to list contents (`disabled` by default, see
+    [Listing contents](#listing-contents) section).
+
 Message repository is customizable under the
 `webf_flysystem_failover.message_repository_dsn` Symfony config path. For now,
 only `doctrine://<connection_name>` and `service://<service_id>` are available.
@@ -101,11 +108,28 @@ webf_flysystem_failover:
                 - service_id_of_adapter_3
                 - service_id_of_adapter_4
                 - service_id_of_adapter_5
+            list_contents_strategy: first
 
     message_repository_dsn: doctrine://my_connection
 ```
 
 Run `bin/console config:dump-reference webf_flysystem_failover` for more info.
+
+### Listing contents
+
+By default, listing contents of a failover adapter throws an exception. Use
+the `list_contents_strategy` option to choose another strategy:
+
+  * `disabled` *(default)*: throw an exception.
+  * `first`: return the contents of the first inner adapter that works. If an
+    inner adapter fails before returning its first item, the next one is used.
+    If all inner adapters fail, the listing fails.
+
+    ⚠️ The listing may be incomplete. An inner adapter that works but has not
+    yet received some files (e.g. right after recovering from an outage, until
+    pending messages are processed) is still used, and the other inner adapters
+    are not consulted. Reading such files keeps working, because a read that
+    fails on an inner adapter falls through to the next.
 
 ### Processing messages
 

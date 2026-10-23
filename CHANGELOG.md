@@ -1,3 +1,9 @@
+## v0.8.1 (unreleased)
+
+### ✨ New features
+
+* Support `listContents` in failover adapters, with the `list_contents_strategy` options
+
 ## v0.8.0 (October 3, 2026)
 
 ### 💥 Breaking changes

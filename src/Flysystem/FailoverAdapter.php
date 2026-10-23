@@ -10,10 +10,12 @@ use League\Flysystem\Config;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
+use League\Flysystem\StorageAttributes;
 use League\Flysystem\UnableToCheckDirectoryExistence;
 use League\Flysystem\UnableToCheckFileExistence;
 use League\Flysystem\UnableToGeneratePublicUrl;
 use League\Flysystem\UnableToGenerateTemporaryUrl;
+use League\Flysystem\UnableToListContents;
 use League\Flysystem\UnableToProvideChecksum;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToRetrieveMetadata;
@@ -29,6 +31,10 @@ use Webf\FlysystemFailoverBundle\Message\ReplicateFile;
 use Webf\FlysystemFailoverBundle\MessageRepository\MessageRepositoryInterface;
 
 /**
+ * @psalm-type _Options=array{
+ *     list_contents_strategy?: ListContentsStrategy
+ * }
+ *
  * @template T of FilesystemAdapter
  *
  * @template-implements CompositeFilesystemAdapter<InnerAdapter<T>>
@@ -37,11 +43,13 @@ final class FailoverAdapter implements ChecksumProvider, CompositeFilesystemAdap
 {
     /**
      * @param iterable<int, InnerAdapter<T>> $adapters
+     * @param _Options                       $options
      */
     public function __construct(
         private string $name,
         private iterable $adapters,
         private MessageRepositoryInterface $messageRepository,
+        private array $options = [],
     ) {
     }
 
@@ -272,7 +280,10 @@ final class FailoverAdapter implements ChecksumProvider, CompositeFilesystemAdap
     #[\Override]
     public function listContents(string $path, bool $deep): iterable
     {
-        throw new UnsupportedOperationException(sprintf('Method "listContents" is not supported with "%s".', self::class));
+        return match ($this->options['list_contents_strategy'] ?? ListContentsStrategy::Disabled) {
+            ListContentsStrategy::Disabled => throw new UnsupportedOperationException(sprintf('Method "listContents" is not supported with "%s" when "list_contents_strategy" option is "disabled".', self::class)),
+            ListContentsStrategy::First => $this->listContentsOfFirst($path, $deep),
+        };
     }
 
     #[\Override]
@@ -370,5 +381,74 @@ final class FailoverAdapter implements ChecksumProvider, CompositeFilesystemAdap
         }
 
         throw new UnableToGenerateTemporaryUrl('no inner adapter is configured or has succeeded.', $path);
+    }
+
+    /**
+     * @return \Generator<int, StorageAttributes>
+     */
+    private function listContentsOfFirst(string $path, bool $deep): \Generator
+    {
+        /** @var array<int, FilesystemException> $failures failures by inner adapter index */
+        $failures = [];
+        $reason = 'No inner adapter has succeeded';
+
+        foreach ($this->adapters as $index => $adapter) {
+            $listing = self::listInnerContents($adapter, $path, $deep);
+
+            $hasItems = false;
+            foreach ($listing as $item) {
+                $hasItems = true;
+                yield $item;
+            }
+
+            $failure = $listing->getReturn();
+            if (null === $failure) {
+                return;
+            }
+
+            $failures[$index] = $failure;
+
+            // Yielded items can't be taken back; falling back would duplicate or mix listings
+            if ($hasItems) {
+                $reason = sprintf('Inner adapter #%d failed after some items were listed, the listing is incomplete', $index);
+                break;
+            }
+        }
+
+        // The exception message leaves out the location and depth: `Filesystem` wraps any listing exception with
+        // `UnableToListContents::atLocation()`, which already states them.
+
+        $lastFailure = end($failures);
+        if (false === $lastFailure) {
+            // An empty list can only mean no adapter
+            throw new UnableToListContents('No inner adapter is configured.');
+        }
+
+        $message = $reason.':';
+        foreach ($failures as $index => $failure) {
+            $message .= sprintf("\n- inner adapter #%d: %s", $index, $failure->getMessage());
+        }
+
+        // Only one exception can be chained; the earlier ones survive in the message
+        throw new UnableToListContents($message, 0, $lastFailure);
+    }
+
+    /**
+     * Returns the failure of the inner adapter instead of throwing it.
+     *
+     * @return \Generator<mixed, StorageAttributes, mixed, ?FilesystemException>
+     */
+    private static function listInnerContents(
+        InnerAdapter $adapter,
+        string $path,
+        bool $deep,
+    ): \Generator {
+        try {
+            yield from $adapter->listContents($path, $deep);
+        } catch (FilesystemException $e) {
+            return $e;
+        }
+
+        return null;
     }
 }

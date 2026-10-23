@@ -8,6 +8,7 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Webf\FlysystemFailoverBundle\Flysystem\ListContentsStrategy;
 
 final class Configuration implements ConfigurationInterface
 {
@@ -85,6 +86,26 @@ final class Configuration implements ConfigurationInterface
                 'timezone or if has an incorrect server time).'
             )
             ->end()
+        ;
+
+        $adapterPrototype
+            ->enumNode('list_contents_strategy')
+            ->info(sprintf(
+                'How to list contents: %s.',
+                implode(', ', array_map(
+                    fn (ListContentsStrategy $strategy) => sprintf(
+                        '"%s" (%s)',
+                        $strategy->value,
+                        $strategy->description()
+                    ),
+                    ListContentsStrategy::cases()
+                ))
+            ))
+            ->values(array_map(
+                fn (ListContentsStrategy $strategy) => $strategy->value,
+                ListContentsStrategy::cases()
+            ))
+            ->defaultValue(ListContentsStrategy::Disabled->value)
         ;
     }
 
