@@ -1,4 +1,4 @@
-## v0.8.1 (unreleased)
+## v0.8.1 (October 23, 2026)
 
 ### ✨ New features
 
@@ -6,7 +6,7 @@
 
 ### 🐛 Bug fixes
 
-* Fix incompatibility with Symfony 6- caused by the `#[\Override]` attribute on `FindResultsNormalizer::getSupportedTypes()`
+* Fix incompatibility with Symfony 6- caused by the `#[\Override]` attribute on `FindResultsNormalizer::getSupportedTypes()` ([#22](https://github.com/webalternatif/flysystem-failover-bundle/pull/22))
 
 ## v0.8.0 (October 3, 2026)
 
