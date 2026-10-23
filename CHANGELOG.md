@@ -2,7 +2,11 @@
 
 ### ✨ New features
 
-* Support `listContents` in failover adapters, with the `list_contents_strategy` options
+* Support `listContents` in failover adapters, with the `list_contents_strategy` options ([#21](https://github.com/webalternatif/flysystem-failover-bundle/pull/21))
+
+### 🐛 Bug fixes
+
+* Fix incompatibility with Symfony 6- caused by the `#[\Override]` attribute on `FindResultsNormalizer::getSupportedTypes()`
 
 ## v0.8.0 (October 3, 2026)
 
