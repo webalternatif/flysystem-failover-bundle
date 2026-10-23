@@ -41,7 +41,7 @@ final class FindResultsNormalizer implements NormalizerInterface
         return $data instanceof FindResults && in_array($format, self::SUPPORTED_FORMATS);
     }
 
-    #[\Override]
+    // The #[\Override] is deliberately missing here: NormalizerInterface doesn't have this method in Symfony < 7
     public function getSupportedTypes(?string $format): array
     {
         return [FindResults::class => true];

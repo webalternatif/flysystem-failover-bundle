@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.19.1@e2ca44251c1f1aa2e35452d426895746b47de64e">
+<files psalm-version="6.20.1@376425b8e67b79773add388e16b4f6be5693dc87">
   <file src="src/MessageRepository/DoctrineMessageRepository.php">
     <DeprecatedMethod>
       <code><![CDATA[addColumn]]></code>
@@ -26,6 +26,11 @@
       <code><![CDATA[setNotnull]]></code>
       <code><![CDATA[setNotnull]]></code>
     </DeprecatedMethod>
+  </file>
+  <file src="src/Serializer/Normalizer/FindResultsNormalizer.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function getSupportedTypes(?string $format): array]]></code>
+    </MissingOverrideAttribute>
   </file>
   <file src="tests/EventListener/DoctrineSchemaListenerTest.php">
     <InternalMethod>
